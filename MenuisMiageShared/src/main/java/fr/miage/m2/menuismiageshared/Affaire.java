@@ -5,6 +5,8 @@
  */
 package fr.miage.m2.menuismiageshared;
 
+import java.util.UUID;
+
 /**
  *
  * @author Flo
@@ -24,18 +26,19 @@ public class Affaire {
     private Long refCommande;
     private String cotesCommande;
     private double montantCommande;
+    // Id à renvoyer à l'utilisateur lors d'une demande de création
+    private Long idDemandeCreation;
 
     /**
      * Constructeur permet au CA de déclarer un objet de type Affaire
-     * @param idAffaire
      * @param prenomClient
      * @param nomClient
      * @param adresseClient
      * @param mailClient
      * @param telClient 
      */
-    public Affaire(Long idAffaire, String prenomClient, String nomClient, String adresseClient, String mailClient, String telClient) {
-        this.idAffaire = idAffaire;
+    public Affaire(String prenomClient, String nomClient, String adresseClient, String mailClient, String telClient) {
+        this.idAffaire = Long.parseLong(UUID.randomUUID().toString());
         this.prenomClient = prenomClient;
         this.nomClient = nomClient;
         this.adresseClient = adresseClient;
@@ -249,6 +252,22 @@ public class Affaire {
      */
     public void setMontantCommande(double montantCommande) {
         this.montantCommande = montantCommande;
+    }
+
+    /**
+     * Récupérer l'id de demande de création sur un objet de type Affaire
+     * @return 
+     */
+    public Long getIdDemandeCreation() {
+        return idDemandeCreation;
+    }
+
+    /**
+     * Mettre à jour l'id de demande de création sur un objet de type Affaire
+     * @param idDemandeCreation 
+     */
+    public void setIdDemandeCreation(Long idDemandeCreation) {
+        this.idDemandeCreation = idDemandeCreation;
     }
     
 }
