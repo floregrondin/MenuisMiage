@@ -26,8 +26,6 @@ public class Affaire {
     private Long refCommande;
     private String cotesCommande;
     private double montantCommande;
-    // Id à renvoyer à l'utilisateur lors d'une demande de création
-    private Long idDemandeCreation;
 
     /**
      * Constructeur permet au CA de déclarer un objet de type Affaire
@@ -254,22 +252,6 @@ public class Affaire {
         this.montantCommande = montantCommande;
     }
 
-    /**
-     * Récupérer l'id de demande de création sur un objet de type Affaire
-     * @return 
-     */
-    public Long getIdDemandeCreation() {
-        return idDemandeCreation;
-    }
-
-    /**
-     * Mettre à jour l'id de demande de création sur un objet de type Affaire
-     * @param idDemandeCreation 
-     */
-    public void setIdDemandeCreation(Long idDemandeCreation) {
-        this.idDemandeCreation = idDemandeCreation;
-    }
-    
 }
 
 /**
