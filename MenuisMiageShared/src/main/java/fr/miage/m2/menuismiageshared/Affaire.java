@@ -5,6 +5,7 @@
  */
 package fr.miage.m2.menuismiageshared;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -23,9 +24,7 @@ public class Affaire {
     private String geolocalisationClient;
     private Disponibilite rdvCommercial;
     private Disponibilite rdvPose;
-    private Long refCommande;
-    private String cotesCommande;
-    private double montantCommande;
+    private List<Commande> listeCommandes;
 
     /**
      * Constructeur permet au CA de déclarer un objet de type Affaire
@@ -211,51 +210,19 @@ public class Affaire {
     }
 
     /**
-     * Récupérer la référence d'une commande passée par un client
+     * Récupérer la liste des commandes d'un client
      * @return 
      */
-    public Long getRefCommande() {
-        return refCommande;
+    public List<Commande> getListeCommandes() {
+        return listeCommandes;
     }
 
     /**
-     * Mettre à jour la référence d'une commande passée par un client
-     * @param refCommande 
+     * Mettre à jour la liste des commandes d'un client
+     * @param listeCommandes 
      */
-    public void setRefCommande(Long refCommande) {
-        this.refCommande = refCommande;
-    }
-
-    /**
-     * Récupérer les côtes du produit commandé par un client
-     * @return 
-     */
-    public String getCotesCommande() {
-        return cotesCommande;
-    }
-
-    /**
-     * Mettre à jour les côtes du produit commandé par un client
-     * @param cotesCommande 
-     */
-    public void setCotesCommande(String cotesCommande) {
-        this.cotesCommande = cotesCommande;
-    }
-
-    /**
-     * Récupérer le montant de la commande passée par le client
-     * @return 
-     */
-    public double getMontantCommande() {
-        return montantCommande;
-    }
-
-    /**
-     * Mettre à jour le montant de la commande passée par le client
-     * @param montantCommande 
-     */
-    public void setMontantCommande(double montantCommande) {
-        this.montantCommande = montantCommande;
+    public void setListeCommandes(List<Commande> listeCommandes) {
+        this.listeCommandes = listeCommandes;
     }
 
 }
