@@ -5,6 +5,8 @@
  */
 package fr.miage.m2.metier;
 
+import fr.miage.m2.menuismiageshared.Affaire;
+import java.util.HashMap;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +16,7 @@ import javax.ejb.Local;
 @Local
 public interface GestionCALocal {
     
-    public Long creerAffaire(String nomClient, String prenomClient, String mailClient, String telClient, String geolocalisationClient);
+    public Long creerAffaire(String nomClient, String prenomClient, String adresseClient, String mailClient, String telClient, String geolocalisationClient);
 
+    public HashMap<Long, Affaire> getAllAffaires();
 }

@@ -35,7 +35,11 @@ public class Disponibilite {
     public static Disponibilite disponibiliteCommercial(Long idCommercial, Timestamp dateRdv) {
         Disponibilite d = new Disponibilite();
         // Génération d'un id unique
-        d.setIdDisponibilite(Long.parseLong(UUID.randomUUID().toString()));
+        Long idDisponibilite = -1L;
+        do {
+            idDisponibilite = UUID.randomUUID().getMostSignificantBits();
+        } while (idDisponibilite < 0);
+        d.setIdDisponibilite(idDisponibilite);
         d.setIdCommercial(idCommercial);
         d.setDateRdv(dateRdv);
         d.setEstDispo(true);
@@ -51,7 +55,11 @@ public class Disponibilite {
     public static Disponibilite disponibilitePose(Long idEquipePose, Timestamp dateRdv) {
         Disponibilite d = new Disponibilite();
         // Génération d'un id unique
-        d.setIdDisponibilite(Long.parseLong(UUID.randomUUID().toString()));
+        Long idDisponibilite = -1L;
+        do {
+            idDisponibilite = UUID.randomUUID().getMostSignificantBits();
+        } while (idDisponibilite < 0);
+        d.setIdDisponibilite(idDisponibilite);
         d.setIdEquipePose(idEquipePose);
         d.setDateRdv(dateRdv);
         d.setEstDispo(true);

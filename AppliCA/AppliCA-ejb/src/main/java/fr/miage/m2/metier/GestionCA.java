@@ -6,6 +6,7 @@
 package fr.miage.m2.metier;
 
 import fr.miage.m2.menuismiageshared.Affaire;
+import java.util.HashMap;
 import javax.ejb.Stateless;
 
 /**
@@ -15,10 +16,24 @@ import javax.ejb.Stateless;
 @Stateless
 public class GestionCA implements GestionCALocal {
 
+    public HashMap<Long, Affaire> listeAffaires;
+    
+    public GestionCA(){
+        listeAffaires = new HashMap<>();
+    }
+    
     @Override
-    public Long creerAffaire(String prenomClient, String nomClient, String adresseClient, String mailClient, String telClient) {
-        Affaire newAffaire = new Affaire(prenomClient, nomClient, adresseClient, mailClient, telClient);
+    public Long creerAffaire(String prenomClient, String nomClient, String adresseClient, String mailClient, String telClient, String geolocalisationClient) {
+        Affaire newAffaire = new Affaire(prenomClient, nomClient, adresseClient, mailClient, telClient, geolocalisationClient);
+        listeAffaires.put(newAffaire.getIdAffaire(), newAffaire);
+        System.out.println(listeAffaires);
         return newAffaire.getIdAffaire();
+    }
+
+    @Override
+    public HashMap<Long, Affaire> getAllAffaires() {
+        System.out.println(listeAffaires);
+        return this.listeAffaires;
     }
 
 }

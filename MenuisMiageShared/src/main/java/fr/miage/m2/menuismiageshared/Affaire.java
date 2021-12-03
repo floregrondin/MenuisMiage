@@ -34,14 +34,20 @@ public class Affaire {
      * @param adresseClient
      * @param mailClient
      * @param telClient 
+     * @param geolocalisationClient
      */
-    public Affaire(String prenomClient, String nomClient, String adresseClient, String mailClient, String telClient) {
-        this.idAffaire = Long.parseLong(UUID.randomUUID().toString());
+    public Affaire(String prenomClient, String nomClient, String adresseClient, String mailClient, String telClient, String geolocalisationClient) {
+        this.idAffaire = -1L;
+        do {
+            this.idAffaire = UUID.randomUUID().getMostSignificantBits();
+        } while (idAffaire < 0);
         this.prenomClient = prenomClient;
         this.nomClient = nomClient;
         this.adresseClient = adresseClient;
         this.mailClient = mailClient;
         this.telClient = telClient;
+        this.geolocalisationClient = geolocalisationClient;
+
     }
 
     /**
@@ -256,7 +262,6 @@ public class Affaire {
 
 /**
  * Permet de déclarer de nouveaux états pour une affaire
- * @author Flo
  */
 enum EtatAffaire{
     COMMANDEE,
