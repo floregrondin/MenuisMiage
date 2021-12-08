@@ -26,6 +26,7 @@ public class ListenerEtatCommande implements MessageListener {
     
     @Override
     public void onMessage(Message message) {
+        System.out.println(message.toString());
     }
     
 }

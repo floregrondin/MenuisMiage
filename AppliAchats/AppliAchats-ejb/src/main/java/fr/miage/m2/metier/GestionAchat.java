@@ -5,6 +5,9 @@
  */
 package fr.miage.m2.metier;
 
+import fr.miage.m2.menuismiageshared.EtatAffaire;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -34,6 +37,17 @@ public class GestionAchat implements GestionAchatLocal {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
+    @Override
+    public void validerPoseAffaire(Long idAffaire) {
+        Map<Long, EtatAffaire> majEtatAffaire = new HashMap<>();
+        majEtatAffaire.put(idAffaire, EtatAffaire.POSEE);
+        try {
+            sendJMSMessageToEtatCommande(majEtatAffaire);
+        } catch (JMSException ex) {
+            Logger.getLogger(GestionAchat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private Message createJMSMessageForetatCommande(Session session, Object messageData) throws JMSException {
         // TODO create and populate message to send
         TextMessage tm = session.createTextMessage();

@@ -46,7 +46,7 @@ public class Affaire {
         this.mailClient = mailClient;
         this.telClient = telClient;
         this.geolocalisationClient = geolocalisationClient;
-
+        this.etatAffaire = EtatAffaire.CREEE;
     }
 
     /**
@@ -225,15 +225,4 @@ public class Affaire {
         this.listeCommandes = listeCommandes;
     }
 
-}
-
-/**
- * Permet de déclarer de nouveaux états pour une affaire
- */
-enum EtatAffaire{
-    COMMANDEE,
-    EN_ATTENTE,
-    RECEPTIONNEE,
-    POSEE,
-    CLOTUREE
 }
