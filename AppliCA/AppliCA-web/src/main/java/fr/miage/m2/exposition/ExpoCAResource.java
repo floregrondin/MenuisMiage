@@ -94,5 +94,12 @@ public class ExpoCAResource {
     public Response getAllAffaires() {
         return Response.ok(this.gson.toJson(this.gestionCA.getAllAffaires())).build();
     }
+    
+    @GET
+    @Path("dispoCommerciaux")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDispoCommerciaux() {
+        return Response.ok(this.gson.toJson(this.gestionCA.getAllDispoCommerciaux())).build();
+    }
 
 }

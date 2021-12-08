@@ -6,6 +6,10 @@
 package fr.miage.m2.metier;
 
 import fr.miage.m2.menuismiageshared.Commande;
+import fr.miage.m2.menuismiageshared.Disponibilite;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -31,6 +35,8 @@ public class GestionCommerciale implements GestionCommercialeLocal {
 
     @Resource(mappedName = "MenuisMiage")
     private ConnectionFactory menuisMiage;
+    
+    private ArrayList<Disponibilite> listeDisponibilites= null;
 
     @Override
     public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant){
@@ -73,5 +79,20 @@ public class GestionCommerciale implements GestionCommercialeLocal {
             }
         }
     }
+
+    @Override
+    public ArrayList<Disponibilite> getListeDisponibilites() {
+        if(this.listeDisponibilites == null){
+            this.listeDisponibilites = new ArrayList<>();
+            this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(1L, new Timestamp(new GregorianCalendar(2021, 12, 9, 8, 0).getTimeInMillis())));
+            this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(2L, new Timestamp(1639036800000L)));
+        }
+        return this.listeDisponibilites;
+    }
+    
+    public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites){
+        this.listeDisponibilites = listeDisponibilites;
+    }
+    
     
 }

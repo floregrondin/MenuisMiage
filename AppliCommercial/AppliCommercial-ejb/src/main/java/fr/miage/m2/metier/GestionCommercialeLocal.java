@@ -6,6 +6,8 @@
 package fr.miage.m2.metier;
 
 import fr.miage.m2.menuismiageshared.Commande;
+import fr.miage.m2.menuismiageshared.Disponibilite;
+import java.util.ArrayList;
 import javax.ejb.Local;
 
 /**
@@ -18,4 +20,6 @@ import javax.ejb.Local;
 public interface GestionCommercialeLocal {
     
     public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant);
+    
+    public ArrayList<Disponibilite> getListeDisponibilites();
 }
