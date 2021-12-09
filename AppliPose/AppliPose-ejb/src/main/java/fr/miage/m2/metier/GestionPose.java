@@ -43,25 +43,25 @@ public class GestionPose implements GestionPoseLocal {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
-    private void sendJMSMessageToEtatCommande(String messageData) throws NamingException, JMSException {
+    private void sendJMSMessageToEtatCommande(Object messageData) throws NamingException, JMSException {
         Connection connection = null;
         Session session = null;
 
             connection = MenuisMiage.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             MessageProducer messageProducer = session.createProducer(etatCommande);
-            messageProducer.send(session.createTextMessage(messageData));
+            messageProducer.send(session.createTextMessage(messageData.toString()));
             
        // context.createProducer().send(etatCommande, messageData);
     }
 
     @Override
     public void validerPose(Long idAffaire) {
+         Map<Long, String> majEtatAffaire = new HashMap<>();
+        majEtatAffaire.put(idAffaire, "POSEE");
         try {
-            sendJMSMessageToEtatCommande("POSEE");
-        } catch (NamingException ex) {
-            Logger.getLogger(GestionPose.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JMSException ex) {
+            sendJMSMessageToEtatCommande(majEtatAffaire);
+        } catch (JMSException | NamingException ex) {
             Logger.getLogger(GestionPose.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
