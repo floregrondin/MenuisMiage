@@ -31,7 +31,7 @@ public class GestionAchat implements GestionAchatLocal {
     @Resource(mappedName = "EtatCommande")
     private Queue etatCommande;
 
-    @Resource(mappedName = "menuisMiage")
+    @Resource(mappedName = "MenuisMiage")
     private ConnectionFactory menuisMiage;
 
     // Add business logic below. (Right-click in editor and choose
