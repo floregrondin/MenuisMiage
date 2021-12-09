@@ -84,7 +84,7 @@ public class GestionCommerciale implements GestionCommercialeLocal {
     public ArrayList<Disponibilite> getListeDisponibilites() {
         if(this.listeDisponibilites == null){
             this.listeDisponibilites = new ArrayList<>();
-            this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(1L, new Timestamp(new GregorianCalendar(2021, 12, 9, 8, 0).getTimeInMillis())));
+            this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(1L, new Timestamp(1639065600000L)));
             this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(2L, new Timestamp(1639036800000L)));
         }
         return this.listeDisponibilites;
