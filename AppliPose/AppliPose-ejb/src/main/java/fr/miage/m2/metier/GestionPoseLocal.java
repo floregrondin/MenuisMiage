@@ -18,4 +18,5 @@ public interface GestionPoseLocal {
     
     public ArrayList<Disponibilite> getListeDisponibilites();
     
+    public void validerPose(Long idAffaire);
 }

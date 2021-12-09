@@ -8,8 +8,17 @@ package fr.miage.m2.metier;
 import fr.miage.m2.menuismiageshared.Disponibilite;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Queue;
+import javax.jms.Session;
+import javax.naming.NamingException;
 
 /**
  *
