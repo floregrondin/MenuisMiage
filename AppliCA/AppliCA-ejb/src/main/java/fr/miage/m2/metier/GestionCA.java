@@ -63,7 +63,21 @@ public class GestionCA implements GestionCALocal {
     
     @Override
     public String getAllDispoPoseurs(){
-        return null;
+        Client client = ClientBuilder.newClient();
+        WebTarget wt  = client.target("http://localhost:8080/AppliPose-web/webresources/ExpoDispoPoseurs");
+        //Invocation.Builder builder = wt.request();
+        Response response = wt
+        .request(MediaType.APPLICATION_JSON)
+        .get();
+
+    String json = response.readEntity(String.class);
+    //json = json.replace("\\", "");
+    //json = json.substring( 1, json.length() - 1 );
+    //json = json.replace("\"", "");
+    //json = json.replace("[", "");
+    //json = json.replace("]", "");
+    return json;
+    //return String.format("Liste des disponibilités : %s", json);
     }
     
     @Override
@@ -90,5 +104,6 @@ public class GestionCA implements GestionCALocal {
             a.setEtatAffaire(EtatAffaire.RECEPTIONNEE);
         }
     }
+            
+    }
 
-}
