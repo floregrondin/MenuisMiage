@@ -14,5 +14,5 @@ import javax.ejb.Local;
 @Local
 public interface ExpoAchatLocal {
     
-    public void validerPoseAffaire(Long idAffaire);
+    public void validerCommandePassee(Long idAffaire);
 }

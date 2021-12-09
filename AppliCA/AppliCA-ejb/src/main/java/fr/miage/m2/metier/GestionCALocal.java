@@ -6,8 +6,6 @@
 package fr.miage.m2.metier;
 
 import fr.miage.m2.menuismiageshared.Affaire;
-import fr.miage.m2.menuismiageshared.Disponibilite;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javax.ejb.Local;
 
@@ -26,4 +24,7 @@ public interface GestionCALocal {
     
     public String getAllDispoPoseurs();
     
+    public Affaire getAffaire(Long idAffaire);
+    
+    public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire);
 }

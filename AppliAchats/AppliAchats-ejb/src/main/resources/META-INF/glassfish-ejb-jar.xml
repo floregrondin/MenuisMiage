@@ -8,6 +8,10 @@
         <res-ref-name>menuisMiage</res-ref-name>
         <jndi-name>menuisMiage</jndi-name>
       </resource-ref>
+      <resource-ref>
+        <res-ref-name>MenuisMiage</res-ref-name>
+        <jndi-name>MenuisMiage</jndi-name>
+      </resource-ref>
       <message-destination-ref>
         <message-destination-ref-name>EtatCommande</message-destination-ref-name>
         <jndi-name>EtatCommande</jndi-name>

@@ -26,9 +26,9 @@ public class WSAchat {
      * @param idAffaire
      * @return 
      */
-    @WebMethod(operationName = "validerPoseAffaire")
-    public String validerPoseAffaire(@WebParam(name = "idAffaire") Long idAffaire) {
-        this.expoAchat.validerPoseAffaire(idAffaire);
+    @WebMethod(operationName = "validerCommandePassee")
+    public String validerCommandePassee(@WebParam(name = "idAffaire") Long idAffaire) {
+        this.expoAchat.validerCommandePassee(idAffaire);
         //GESTION D'ERREUR A FAIRE Si id affaire n'existe pas
         return "OK";
     }

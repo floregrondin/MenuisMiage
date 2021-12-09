@@ -17,11 +17,11 @@ import javax.ejb.Stateless;
 public class ExpoAchat implements ExpoAchatLocal {
 
     @EJB
-    public GestionAchatLocal gestionAchat;
-    
+    private GestionAchatLocal gestionAchat;
+
     @Override
-    public void validerPoseAffaire(Long idAffaire) {
-        this.gestionAchat.validerPoseAffaire(idAffaire);
+    public void validerCommandePassee(Long idAffaire) {
+        this.gestionAchat.validerCommandePassee(idAffaire);
     }
 
     // Add business logic below. (Right-click in editor and choose

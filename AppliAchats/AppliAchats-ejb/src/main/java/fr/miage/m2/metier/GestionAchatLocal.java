@@ -9,10 +9,10 @@ import javax.ejb.Local;
 
 /**
  *
- * @author Alexis Bournavaud
+ * @author Flo
  */
 @Local
 public interface GestionAchatLocal {
     
-    public void validerPoseAffaire(Long idAffaire);
+        public void validerCommandePassee(Long idAffaire);
 }
