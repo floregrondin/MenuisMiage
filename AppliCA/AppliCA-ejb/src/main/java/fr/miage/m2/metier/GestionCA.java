@@ -79,9 +79,15 @@ public class GestionCA implements GestionCALocal {
      */
     @Override
     public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire) {
-        Affaire a = getAffaire(idAffaire);     
+        Affaire a = getAffaire(idAffaire); 
+        if (a == null){
+            throw new Error("ERREUR : Affaire inexistante");
+        }
+        
         if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())){
             a.setEtatAffaire(EtatAffaire.COMMANDEE);
+        } else if (etatAffaire.equals(EtatAffaire.RECEPTIONNEE.toString())){
+            a.setEtatAffaire(EtatAffaire.RECEPTIONNEE);
         }
     }
 

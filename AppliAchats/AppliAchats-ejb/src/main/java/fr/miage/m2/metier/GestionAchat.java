@@ -47,7 +47,7 @@ public class GestionAchat implements GestionAchatLocal {
         }
     }
     
-    private Message createJMSMessageForetatCommande(Session session, Object messageData) throws JMSException {
+    private Message createJMSMessageForEtatCommande(Session session, Object messageData) throws JMSException {
         // TODO create and populate message to send
         TextMessage tm = session.createTextMessage();
         tm.setText(messageData.toString());
@@ -61,7 +61,7 @@ public class GestionAchat implements GestionAchatLocal {
             connection = menuisMiage.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             MessageProducer messageProducer = session.createProducer(etatCommande);
-            messageProducer.send(createJMSMessageForetatCommande(session, messageData));
+            messageProducer.send(createJMSMessageForEtatCommande(session, messageData));
         } finally {
             if (session != null) {
                 try {
@@ -73,6 +73,17 @@ public class GestionAchat implements GestionAchatLocal {
             if (connection != null) {
                 connection.close();
             }
+        }
+    }
+
+    @Override
+    public void validerReceptionCommande(Long idAffaire) {
+        Map<Long, String> majEtatAffaire = new HashMap<>();
+        majEtatAffaire.put(idAffaire, "RECEPTIONNEE");
+        try {
+            sendJMSMessageToEtatCommande(majEtatAffaire);
+        } catch (JMSException ex) {
+            Logger.getLogger(GestionAchat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

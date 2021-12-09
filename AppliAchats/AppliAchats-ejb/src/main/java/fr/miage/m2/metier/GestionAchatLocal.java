@@ -15,4 +15,6 @@ import javax.ejb.Local;
 public interface GestionAchatLocal {
     
         public void validerCommandePassee(Long idAffaire);
+        
+        public void validerReceptionCommande(Long idAffaire);
 }
