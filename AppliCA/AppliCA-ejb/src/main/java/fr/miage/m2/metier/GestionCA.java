@@ -63,7 +63,21 @@ public class GestionCA implements GestionCALocal {
     
     @Override
     public String getAllDispoPoseurs(){
-        return null;
+        Client client = ClientBuilder.newClient();
+        WebTarget wt  = client.target("http://localhost:8080/AppliPose-web/webresources/ExpoDispoPoseurs");
+        //Invocation.Builder builder = wt.request();
+        Response response = wt
+        .request(MediaType.APPLICATION_JSON)
+        .get();
+
+    String json = response.readEntity(String.class);
+    //json = json.replace("\\", "");
+    //json = json.substring( 1, json.length() - 1 );
+    //json = json.replace("\"", "");
+    //json = json.replace("[", "");
+    //json = json.replace("]", "");
+    return json;
+    //return String.format("Liste des disponibilités : %s", json);
     }
     
     @Override
@@ -80,12 +94,19 @@ public class GestionCA implements GestionCALocal {
     @Override
     public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire) {
         Affaire a = getAffaire(idAffaire); 
+
+        if (a == null){
+            throw new Error("ERREUR : Affaire inexistante");
+        }
         
         if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())){
             a.setEtatAffaire(EtatAffaire.COMMANDEE);
+        } else if (etatAffaire.equals(EtatAffaire.RECEPTIONNEE.toString())){
+            a.setEtatAffaire(EtatAffaire.RECEPTIONNEE);
         }else if(etatAffaire.equals(EtatAffaire.POSEE.toString())){
             a.setEtatAffaire(EtatAffaire.POSEE);
         }
     }
+            
+    }
 
-}

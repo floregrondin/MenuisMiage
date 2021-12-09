@@ -5,31 +5,24 @@
  */
 package fr.miage.m2.metier;
 
-
-import fr.miage.m2.menuismiageshared.Affaire;
-import java.util.HashMap;
-import java.util.Map;
+import fr.miage.m2.menuismiageshared.Disponibilite;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSConnectionFactory;
-import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.naming.Context;
 import javax.naming.NamingException;
 
 /**
  *
- * @author Alexis Bournavaud
+ * @author Valentin
  */
 @Stateless
 public class GestionPose implements GestionPoseLocal {
@@ -67,4 +60,19 @@ public class GestionPose implements GestionPoseLocal {
     }
     
     
+    private ArrayList<Disponibilite> listeDisponibilites= null;
+    
+    @Override
+    public ArrayList<Disponibilite> getListeDisponibilites() {
+        if(this.listeDisponibilites == null){
+            this.listeDisponibilites = new ArrayList<>();
+            this.listeDisponibilites.add(Disponibilite.disponibilitePose(1L, new Timestamp(1639065600000L)));
+            this.listeDisponibilites.add(Disponibilite.disponibilitePose(2L, new Timestamp(1639036800000L)));
+        }
+        return this.listeDisponibilites;
+    }
+    
+    public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites){
+        this.listeDisponibilites = listeDisponibilites;
+    }
 }

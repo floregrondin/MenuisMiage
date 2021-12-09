@@ -27,9 +27,9 @@ import javax.ws.rs.core.Response;
 /**
  * REST Web Service
  *
- * 
+ *
  * Déployé sur url : http://localhost:8080/AppliCA-web/webresources/ExpoCA
- * 
+ *
  * @author Flo
  */
 @Path("ExpoCA")
@@ -39,7 +39,7 @@ public class ExpoCAResource {
     GestionCALocal gestionCA = lookupGestionCALocal();
 
     private Gson gson;
-    
+
     @Context
     private UriInfo context;
 
@@ -51,7 +51,9 @@ public class ExpoCAResource {
     }
 
     /**
-     * Retrieves representation of an instance of fr.miage.m2.exposition.ExpoCAResource
+     * Retrieves representation of an instance of
+     * fr.miage.m2.exposition.ExpoCAResource
+     *
      * @return an instance of java.lang.String
      */
     @GET
@@ -63,6 +65,7 @@ public class ExpoCAResource {
 
     /**
      * PUT method for updating or creating an instance of ExpoCAResource
+     *
      * @param content representation for the resource
      */
     @PUT
@@ -79,27 +82,42 @@ public class ExpoCAResource {
             throw new RuntimeException(ne);
         }
     }
-    
+
     @POST
     @Path("affaires")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postAffaire(@QueryParam("prenomClient") String prenomClient, @QueryParam("nomClient") String nomClient, @QueryParam("adresseClient") String adresseClient,@QueryParam("mailClient") String mailClient, @QueryParam("telClient") String telClient, @QueryParam("geolocalisationClient") String geolocalisationClient) {
+    public Response postAffaire(@QueryParam("prenomClient") String prenomClient, @QueryParam("nomClient") String nomClient, @QueryParam("adresseClient") String adresseClient, @QueryParam("mailClient") String mailClient, @QueryParam("telClient") String telClient, @QueryParam("geolocalisationClient") String geolocalisationClient) {
         Long idAffaire = this.gestionCA.creerAffaire(prenomClient, nomClient, adresseClient, mailClient, telClient, geolocalisationClient);
         return Response.ok(this.gson.toJson(idAffaire)).build();
     }
-    
+
     @GET
     @Path("affaires")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAffaires() {
         return Response.ok(this.gson.toJson(this.gestionCA.getAllAffaires())).build();
     }
-    
+
     @GET
     @Path("dispoCommerciaux")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllDispoCommerciaux() {
-        return Response.ok(this.gson.toJson(this.gestionCA.getAllDispoCommerciaux())).build();
+        String response = this.gson.toJson(this.gestionCA.getAllDispoCommerciaux());
+        response = response.replace("\\", "");
+        response = response.substring( 1, response.length() - 1 );
+        //System.out.println("ICI : " + response);
+        return Response.ok(response).build();
+    }
+
+    @GET
+    @Path("dispoPoseurs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDispoPoseurs() {
+        String response = this.gson.toJson(this.gestionCA.getAllDispoPoseurs());
+        response = response.replace("\\", "");
+        response = response.substring( 1, response.length() - 1 );
+        //System.out.println("ICI : " + response);
+        return Response.ok(response).build();
     }
 
 }

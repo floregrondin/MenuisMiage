@@ -32,4 +32,16 @@ public class WSAchat {
         //GESTION D'ERREUR A FAIRE Si id affaire n'existe pas
         return "OK";
     }
+    
+    /**
+     * 
+     * @param idAffaire
+     * @return 
+     */
+    @WebMethod(operationName = "validerReceptionCommande")
+    public String validerReceptionCommande(@WebParam(name = "idAffaire") Long idAffaire) {
+        this.expoAchat.validerReceptionCommande(idAffaire);
+        //GESTION D'ERREUR A FAIRE Si id affaire n'existe pas
+        return "OK";
+    }
 }

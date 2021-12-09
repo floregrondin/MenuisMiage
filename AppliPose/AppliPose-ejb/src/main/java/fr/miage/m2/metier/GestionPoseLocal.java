@@ -5,13 +5,18 @@
  */
 package fr.miage.m2.metier;
 
+import fr.miage.m2.menuismiageshared.Disponibilite;
+import java.util.ArrayList;
 import javax.ejb.Local;
 
 /**
  *
- * @author Alexis Bournavaud
+ * @author Valentin
  */
 @Local
 public interface GestionPoseLocal {
-     public void validerPose(Long idAffaire);
+    
+    public ArrayList<Disponibilite> getListeDisponibilites();
+    
+    public void validerPose(Long idAffaire);
 }
