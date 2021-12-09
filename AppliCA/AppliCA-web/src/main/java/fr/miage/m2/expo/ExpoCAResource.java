@@ -20,6 +20,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -90,6 +91,8 @@ public class ExpoCAResource {
         Long idAffaire = this.gestionCA.creerAffaire(prenomClient, nomClient, adresseClient, mailClient, telClient, geolocalisationClient);
         return Response.ok(this.gson.toJson(idAffaire)).build();
     }
+    
+    
 
     @GET
     @Path("affaires")
@@ -118,6 +121,24 @@ public class ExpoCAResource {
         response = response.substring( 1, response.length() - 1 );
         //System.out.println("ICI : " + response);
         return Response.ok(response).build();
+    }
+    
+    
+        /**
+     * Permet de cloturer une affaire. Pour l'appeler on doit utiliser une URL du type :
+     * http://localhost:8080/banque_rest-web/AppliCA-web/webresources/ExpoCA/cloturerAffaire/1
+     *
+     * @param idAffaire l'affaire
+     *
+     * @return "ok. Affaire cloturée."
+     */
+    @PUT
+    @Path("cloturerAffaire/{idAffaire}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cloturerAffaire(@PathParam("idAffaire") String idAffaire) {
+        Long idA = Long.valueOf(idAffaire);
+
+        return Response.ok(this.gson.toJson(this.gestionCA.cloturerAffaire(idA))).build();
     }
 
 }

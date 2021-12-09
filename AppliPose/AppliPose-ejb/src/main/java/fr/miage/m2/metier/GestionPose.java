@@ -35,24 +35,29 @@ public class GestionPose implements GestionPoseLocal {
     @Resource(mappedName = "MenuisMiage")
     private ConnectionFactory MenuisMiage;
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-
+    
+    /**
+     * Envoi JMS pour mettre à jour l'état de l'affaire
+     * @param idAffaire
+     */
     private void sendJMSMessageToEtatCommande(Object messageData) throws NamingException, JMSException {
         Connection connection = null;
         Session session = null;
 
-            connection = MenuisMiage.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            MessageProducer messageProducer = session.createProducer(etatCommande);
-            messageProducer.send(session.createTextMessage(messageData.toString()));
-            
-       // context.createProducer().send(etatCommande, messageData);
+        connection = MenuisMiage.createConnection();
+        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        MessageProducer messageProducer = session.createProducer(etatCommande);
+        messageProducer.send(session.createTextMessage(messageData.toString()));
+
     }
 
+    /**
+     * Création de la map à envoyer en ObjectMessage pour mettre à jour l'état de l'affaire
+     * @param idAffaire
+     */
     @Override
     public void validerPose(Long idAffaire) {
-         Map<Long, String> majEtatAffaire = new HashMap<>();
+        Map<Long, String> majEtatAffaire = new HashMap<>();
         majEtatAffaire.put(idAffaire, "POSEE");
         try {
             sendJMSMessageToEtatCommande(majEtatAffaire);

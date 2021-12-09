@@ -105,8 +105,23 @@ public class GestionCA implements GestionCALocal {
             a.setEtatAffaire(EtatAffaire.RECEPTIONNEE);
         }else if(etatAffaire.equals(EtatAffaire.POSEE.toString())){
             a.setEtatAffaire(EtatAffaire.POSEE);
+        }else if(etatAffaire.equals(EtatAffaire.CLOTUREE.toString())){
+            a.setEtatAffaire(EtatAffaire.CLOTUREE);
         }
     }
-            
+
+    /**
+     * Mettre à jour l'affaire à l'état cloturée
+     * @param idAffaire
+     * @return OK 
+     * On aurait pu appelé une méthode pour encaisser le deuxième chèque ici 
+     * si on avait implémenté la gestion compta
+     */
+    @Override
+    public String cloturerAffaire(Long idAffaire) {
+        this.updateEtatAffaireByIdAffaire(idAffaire, "CLOTUREE");
+        return "OK. Affaire cloturée.";
     }
+            
+}
 

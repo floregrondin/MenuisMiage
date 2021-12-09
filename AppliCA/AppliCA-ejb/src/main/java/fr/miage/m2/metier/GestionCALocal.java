@@ -26,5 +26,7 @@ public interface GestionCALocal {
     
     public Affaire getAffaire(Long idAffaire);
     
+    public String cloturerAffaire(Long idAffaire);
+    
     public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire);
 }
