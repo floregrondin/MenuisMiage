@@ -6,13 +6,11 @@
 package fr.miage.m2.metier;
 
 import fr.miage.m2.menuismiageshared.Affaire;
-import fr.miage.m2.menuismiageshared.Disponibilite;
-import java.util.ArrayList;
+import fr.miage.m2.menuismiageshared.EtatAffaire;
 import java.util.HashMap;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -66,6 +64,32 @@ public class GestionCA implements GestionCALocal {
     @Override
     public String getAllDispoPoseurs(){
         return null;
+    }
+    
+    @Override
+    public Affaire getAffaire(Long idAffaire){
+        for (Affaire a : getAllAffaires().values()){
+            if (a.getIdAffaire() == idAffaire){
+                return a;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Mettre à jour l'affaire après réception JMS
+     * @param idAffaire
+     * @param etatAffaire
+     * @return 
+     */
+    @Override
+    public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire) {
+        Affaire a = getAffaire(idAffaire);
+        
+        if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())){
+            a.setEtatAffaire(EtatAffaire.COMMANDEE);
+        }
+        System.out.println("mon affaire" + a.toString());
     }
 
 }

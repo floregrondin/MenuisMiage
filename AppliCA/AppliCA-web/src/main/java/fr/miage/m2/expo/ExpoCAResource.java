@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.miage.m2.exposition;
+package fr.miage.m2.expo;
 
 import com.google.gson.Gson;
 import fr.miage.m2.metier.GestionCALocal;

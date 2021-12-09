@@ -14,6 +14,7 @@ import javax.jws.WebService;
 
 /**
  *
+ * Lien WS Flo : http://desktop-5u8nqcn:8080/AppliCommercial-web/WSCommerciale?wsdl
  * @author Flo
  */
 @WebService(serviceName = "WSCommerciale")

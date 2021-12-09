@@ -3,16 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.miage.m2.metier;
-
-import javax.ejb.Local;
+package fr.miage.m2.menuismiageshared;
 
 /**
- *
+ * Permet de déclarer de nouveaux états pour une affaire
  * @author Flo
  */
-@Local
-public interface GestionAchatLocal {
-    
-        public void validerCommandePassee(Long idAffaire);
+public enum EtatAffaire {
+    CREEE,
+    COMMANDEE,
+    EN_ATTENTE,
+    RECEPTIONNEE,
+    POSEE,
+    CLOTUREE
 }

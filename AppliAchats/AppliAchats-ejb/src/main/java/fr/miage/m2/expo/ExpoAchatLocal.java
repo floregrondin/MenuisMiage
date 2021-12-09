@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.miage.m2.metier;
+package fr.miage.m2.expo;
 
 import javax.ejb.Local;
 
@@ -12,7 +12,7 @@ import javax.ejb.Local;
  * @author Flo
  */
 @Local
-public interface GestionAchatLocal {
+public interface ExpoAchatLocal {
     
-        public void validerCommandePassee(Long idAffaire);
+    public void validerCommandePassee(Long idAffaire);
 }

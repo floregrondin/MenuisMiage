@@ -5,6 +5,8 @@
  */
 package fr.miage.m2.metier;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -20,7 +22,7 @@ import javax.jms.TextMessage;
 
 /**
  *
- * @author Alexis Bournavaud
+ * @author Flo
  */
 @Stateless
 public class GestionAchat implements GestionAchatLocal {
@@ -28,12 +30,23 @@ public class GestionAchat implements GestionAchatLocal {
     @Resource(mappedName = "EtatCommande")
     private Queue etatCommande;
 
-    @Resource(mappedName = "menuisMiage")
+    @Resource(mappedName = "MenuisMiage")
     private ConnectionFactory menuisMiage;
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
+    @Override
+    public void validerCommandePassee(Long idAffaire) {
+        Map<Long, String> majEtatAffaire = new HashMap<>();
+        majEtatAffaire.put(idAffaire, "COMMANDEE");
+        try {
+            sendJMSMessageToEtatCommande(majEtatAffaire);
+        } catch (JMSException ex) {
+            Logger.getLogger(GestionAchat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private Message createJMSMessageForetatCommande(Session session, Object messageData) throws JMSException {
         // TODO create and populate message to send
         TextMessage tm = session.createTextMessage();
@@ -62,6 +75,4 @@ public class GestionAchat implements GestionAchatLocal {
             }
         }
     }
-    
-    
 }
