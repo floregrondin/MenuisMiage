@@ -5,6 +5,7 @@
  */
 package fr.miage.m2.metier;
 
+import fr.miage.m2.menuismiageshared.Commande;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -85,5 +86,11 @@ public class GestionAchat implements GestionAchatLocal {
         } catch (JMSException ex) {
             Logger.getLogger(GestionAchat.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void passerCommande(Commande cmd) {
+        //Hors domaine --> Communication avec fournisseur
+        System.out.println("ENVOI DE LA COMMANDE AU FOURNISSEUR");
     }
 }

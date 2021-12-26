@@ -6,8 +6,11 @@
 package fr.miage.m2.metier;
 
 import fr.miage.m2.menuismiageshared.Affaire;
+import fr.miage.m2.menuismiageshared.Commande;
 import fr.miage.m2.menuismiageshared.EtatAffaire;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -23,87 +26,104 @@ import javax.ws.rs.core.Response;
 public class GestionCA implements GestionCALocal {
 
     public HashMap<Long, Affaire> listeAffaires;
-    
-    public GestionCA(){
+
+    public GestionCA() {
         listeAffaires = new HashMap<>();
     }
-    
+
+    /**
+     * Permet de créer une affaire
+     * @param prenomClient
+     * @param nomClient
+     * @param adresseClient
+     * @param mailClient
+     * @param telClient
+     * @param geolocalisationClient
+     * @return id de l'affaire
+     */
     @Override
     public Long creerAffaire(String prenomClient, String nomClient, String adresseClient, String mailClient, String telClient, String geolocalisationClient) {
         Affaire newAffaire = new Affaire(prenomClient, nomClient, adresseClient, mailClient, telClient, geolocalisationClient);
         listeAffaires.put(newAffaire.getIdAffaire(), newAffaire);
-        System.out.println(listeAffaires);
         return newAffaire.getIdAffaire();
     }
 
+    /**
+     * Récupérer toutes les affaires créées
+     * @return la liste des affaires
+     */
     @Override
     public HashMap<Long, Affaire> getAllAffaires() {
-        System.out.println(listeAffaires);
+        //System.out.print("PRINT ALL AFFAIRES : " + getAllAffaires());
         return this.listeAffaires;
     }
-    
+
+    /**
+     * Récupérer toutes les disponibilités des commerciaux
+     * @return la liste des disponibilités des commerciaux en json
+     */
     @Override
-    public String getAllDispoCommerciaux(){
+    public String getAllDispoCommerciaux() {
         Client client = ClientBuilder.newClient();
-        WebTarget wt  = client.target("http://localhost:8080/AppliCommercial-web/webresources/ExpoDispoCommerciaux");
+        WebTarget wt = client.target("http://localhost:8080/AppliCommercial-web/webresources/ExpoDispoCommerciaux");
         //Invocation.Builder builder = wt.request();
         Response response = wt
-        .request(MediaType.APPLICATION_JSON)
-        .get();
+                .request(MediaType.APPLICATION_JSON)
+                .get();
 
-    String json = response.readEntity(String.class);
-    //json = json.replace("\\", "");
-    //json = json.replace("\"", "");
-    //json = json.replace("[", "");
-    //json = json.replace("]", "");
-    return json;
-    //return String.format("Liste des disponibilités : %s", json);
-    
+        String json = response.readEntity(String.class);
+        return json;
+
     }
-    
+
+    /**
+     * Récupérer toutes les disponibilités des poseurs
+     * @return la liste des disponibilités des poseurs en json
+     */
     @Override
-    public String getAllDispoPoseurs(){
+    public String getAllDispoPoseurs() {
         Client client = ClientBuilder.newClient();
-        WebTarget wt  = client.target("http://localhost:8080/AppliPose-web/webresources/ExpoDispoPoseurs");
-        //Invocation.Builder builder = wt.request();
+        WebTarget wt = client.target("http://localhost:8080/AppliPose-web/webresources/ExpoDispoPoseurs");
         Response response = wt
-        .request(MediaType.APPLICATION_JSON)
-        .get();
+                .request(MediaType.APPLICATION_JSON)
+                .get();
 
-    String json = response.readEntity(String.class);
-    //json = json.replace("\\", "");
-    //json = json.substring( 1, json.length() - 1 );
-    //json = json.replace("\"", "");
-    //json = json.replace("[", "");
-    //json = json.replace("]", "");
-    return json;
-    //return String.format("Liste des disponibilités : %s", json);
+        String json = response.readEntity(String.class);
+        return json;
     }
-    
+
+    /**
+     * Récupérer une affaire selon son id
+     * @param idAffaire
+     * @return 
+     */
     @Override
-    public Affaire getAffaire(Long idAffaire){
+    public Affaire getAffaire(Long idAffaire) {
         return getAllAffaires().get(idAffaire);
     }
 
     /**
-     * Mettre à jour l'affaire après réception JMS
-     * @param idAffaire
-     * @param etatAffaire
-     * @return 
+     * Mettre à jour l'état d'une affaire après réception JMS
+     *
+     * @param idAffaire Id de l'affaire pour pouvoir faire un get dessus
+     * @param etatAffaire Nouvel etat de l'affaire
      */
     @Override
     public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire) {
-        Affaire a = getAffaire(idAffaire); 
+        Affaire a = getAffaire(idAffaire);
 
-        if (a == null){
-            throw new Error("ERREUR : Affaire inexistante");
+        //TODO: Gérer directement dans l'expo WS/REST si id fourni n'existe pas en bd (dans notre liste)
+        if (a == null) {
+            //throw new Error("ERREUR : Affaire inexistante");
         }
-        
-        if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())){
+
+        // Mise à jour de l'état de l'affaire avec l'enum 
+        // TODO: Essayer de faire avant l'envoi dans JMS
+        if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())) {
             a.setEtatAffaire(EtatAffaire.COMMANDEE);
-        } else if (etatAffaire.equals(EtatAffaire.RECEPTIONNEE.toString())){
+        } else if (etatAffaire.equals(EtatAffaire.RECEPTIONNEE.toString())) {
             a.setEtatAffaire(EtatAffaire.RECEPTIONNEE);
-        }else if(etatAffaire.equals(EtatAffaire.POSEE.toString())){
+        } else if (etatAffaire.equals(EtatAffaire.POSEE.toString())) {
             a.setEtatAffaire(EtatAffaire.POSEE);
         }else if(etatAffaire.equals(EtatAffaire.CLOTUREE.toString())){
             a.setEtatAffaire(EtatAffaire.CLOTUREE);
@@ -122,6 +142,34 @@ public class GestionCA implements GestionCALocal {
         this.updateEtatAffaireByIdAffaire(idAffaire, "CLOTUREE");
         return "OK. Affaire cloturée.";
     }
-            
-}
+    
+    /*        
+     * Permet de créer une commande et de la rattacher à une affaire
+     * @param refCatalogue La référence du produit commandé
+     * @param cotes Les cotes du produit commandé
+     * @param montant Le montant de la commande
+     * @param idAffaire L'id de l'affaire
+     */
+    @Override
+    public void associerCmdAffaire(Long refCatalogue, String cotes, double montant, Long idAffaire) {
+        // Récupérer l'affaire
+        if (getAffaire(idAffaire) != null){
+            Affaire affaire = getAffaire(idAffaire);
+            Commande cmd = new Commande(refCatalogue, cotes, montant, idAffaire);
+            List<Commande> listeCmd = affaire.getListeCommandes();
+            // Ajouter la commande à la liste des commandes en "bd"
+            if (listeCmd == null){
+                // S'il n'y a pas de commande pour une affaire, on créé une liste
+                listeCmd = new ArrayList<>();
+            }
+            // Et on rajoute la commande
+            listeCmd.add(cmd);
+            // Ajouter la commande à la liste des commandes de l'affaire
+            affaire.setListeCommandes(listeCmd);
+        } else {
+            System.out.println("ERREUR : Affaire introuvable.");
+        }
+        
+    }
 
+}

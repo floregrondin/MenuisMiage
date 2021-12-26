@@ -29,4 +29,7 @@ public interface GestionCALocal {
     public String cloturerAffaire(Long idAffaire);
     
     public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire);
+    
+    public void associerCmdAffaire(Long refCatalogue, String cotes, double montant, Long idAffaire);
+    
 }

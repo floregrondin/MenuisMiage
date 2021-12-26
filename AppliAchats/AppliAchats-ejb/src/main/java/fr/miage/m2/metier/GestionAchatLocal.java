@@ -5,6 +5,7 @@
  */
 package fr.miage.m2.metier;
 
+import fr.miage.m2.menuismiageshared.Commande;
 import javax.ejb.Local;
 
 /**
@@ -17,4 +18,6 @@ public interface GestionAchatLocal {
         public void validerCommandePassee(Long idAffaire);
         
         public void validerReceptionCommande(Long idAffaire);
+        
+        public void passerCommande(Commande cmd);
 }

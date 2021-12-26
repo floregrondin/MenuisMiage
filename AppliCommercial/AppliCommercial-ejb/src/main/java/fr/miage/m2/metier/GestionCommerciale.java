@@ -9,7 +9,6 @@ import fr.miage.m2.menuismiageshared.Commande;
 import fr.miage.m2.menuismiageshared.Disponibilite;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -52,8 +51,8 @@ public class GestionCommerciale implements GestionCommercialeLocal {
     }
     
     private Message createJMSMessageForinfosProduits(Session session, Commande cmd) throws JMSException {
-        // TODO create and populate message to send
         ObjectMessage tm = session.createObjectMessage();
+        // Envoi de l'objet commande
         tm.setObject(cmd);
         return tm;
     }
@@ -82,6 +81,7 @@ public class GestionCommerciale implements GestionCommercialeLocal {
 
     @Override
     public ArrayList<Disponibilite> getListeDisponibilites() {
+        // Création d'une liste de dispo par défaut
         if(this.listeDisponibilites == null){
             this.listeDisponibilites = new ArrayList<>();
             this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(1L, new Timestamp(1639065600000L)));

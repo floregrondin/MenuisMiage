@@ -15,8 +15,6 @@ import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
-import javax.jms.TextMessage;
 
 /**
  *
@@ -39,10 +37,7 @@ public class ListenerEtatCommande implements MessageListener {
     public void onMessage(Message message) {
 
         try {
-            System.out.println("mon message string " + message.getBody(String.class));
             String[] argsMess = message.getBody(String.class).replace("{", "").replace("}","").split("=");
-            System.out.println("id affaire : " + argsMess[0]);
-            System.out.println("etat affaire : " + argsMess[1]);
             this.gestionCA.updateEtatAffaireByIdAffaire(Long.valueOf(argsMess[0]), argsMess[1]);
         } catch (JMSException ex) {
             Logger.getLogger(ListenerEtatCommande.class.getName()).log(Level.SEVERE, null, ex);
