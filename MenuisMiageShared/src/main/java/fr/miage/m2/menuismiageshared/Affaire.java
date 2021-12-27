@@ -225,4 +225,9 @@ public class Affaire {
         this.listeCommandes = listeCommandes;
     }
 
+    @Override
+    public String toString() {
+        return "Affaire{" + "idAffaire=" + idAffaire + ", etatAffaire=" + etatAffaire + ", prenomClient=" + prenomClient + ", nomClient=" + nomClient + ", adresseClient=" + adresseClient + ", mailClient=" + mailClient + ", telClient=" + telClient + ", geolocalisationClient=" + geolocalisationClient + ", rdvCommercial=" + rdvCommercial + ", rdvPose=" + rdvPose + ", listeCommandes=" + listeCommandes + '}';
+    }
+
 }

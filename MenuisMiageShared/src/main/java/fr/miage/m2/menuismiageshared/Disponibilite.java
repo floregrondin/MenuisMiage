@@ -147,6 +147,11 @@ public class Disponibilite {
     public void setDateRdv(Timestamp dateRdv) {
         this.dateRdv = dateRdv;
     }
+
+    @Override
+    public String toString() {
+        return "Disponibilite{" + "idDisponibilite=" + idDisponibilite + ", idCommercial=" + idCommercial + ", idEquipePose=" + idEquipePose + ", estDispo=" + estDispo + ", dateRdv=" + dateRdv + '}';
+    }
     
     
 }

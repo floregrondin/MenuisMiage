@@ -5,12 +5,19 @@
  */
 package fr.miage.m2.metier;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.miage.m2.menuismiageshared.Affaire;
 import fr.miage.m2.menuismiageshared.Commande;
+import fr.miage.m2.menuismiageshared.Disponibilite;
 import fr.miage.m2.menuismiageshared.EtatAffaire;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -103,18 +110,22 @@ public class GestionCA implements GestionCALocal {
     }
 
     /**
-     * Mettre à jour l'état d'une affaire après réception JMS
+     * Permet de mettre à jour l'état d'une affaire après réception JMS
      *
      * @param idAffaire Id de l'affaire pour pouvoir faire un get dessus
      * @param etatAffaire Nouvel etat de l'affaire
      */
     @Override
     public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire) {
+        System.out.println("idAffaire : " + idAffaire);
+        System.out.println("etatAffaire : " + etatAffaire);
+
         Affaire a = getAffaire(idAffaire);
 
+        System.out.println("Récupération de l'affaire : " + a);
         //TODO: Gérer directement dans l'expo WS/REST si id fourni n'existe pas en bd (dans notre liste)
         if (a == null) {
-            //throw new Error("ERREUR : Affaire inexistante");
+            throw new Error("ERREUR : Affaire inexistante");
         }
 
         // Mise à jour de l'état de l'affaire avec l'enum 
@@ -127,7 +138,7 @@ public class GestionCA implements GestionCALocal {
             a.setEtatAffaire(EtatAffaire.POSEE);
         }else if(etatAffaire.equals(EtatAffaire.CLOTUREE.toString())){
             a.setEtatAffaire(EtatAffaire.CLOTUREE);
-        }
+        } 
     }
 
     /**
@@ -170,6 +181,61 @@ public class GestionCA implements GestionCALocal {
             System.out.println("ERREUR : Affaire introuvable.");
         }
         
+    }
+
+    @Override
+    public void setEtatDispoCommerciaux(String idCommande, String idDispo) {
+        System.out.println("dispo commerciaux : " + getAllDispoCommerciaux());
+                
+        // Parcourir les dispo commerciaux
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, String>> mapDispoC;
+        Disponibilite dispoRecherchee = new Disponibilite();
+        try {
+            mapDispoC = mapper.readValue(getAllDispoCommerciaux(), new TypeReference<List<Map<String, String>>>() {});
+            // Pour chaque disponibilité
+            loopRecherche:
+            for (Map<String, String> liste : mapDispoC){
+                System.out.println("dispo dans la liste : " + liste.get("idDisponibilite"));
+                System.out.println("ma dispo : " + idDispo);
+                // Si elle contient l'attribut recherché
+                if (liste.get("idDisponibilite").equals(idDispo)){
+                    // Récupérer la disponibilité
+                    System.out.println("je rentre : " + liste);
+                    System.out.println("idDispo : " + liste.get("idDisponibilite"));
+                    dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
+                    dispoRecherchee.setIdCommercial(Long.valueOf(liste.get("idCommercial")));
+                    dispoRecherchee.setEstDispo(false);
+                    System.out.println("date : " + liste.get("dateRdv"));
+                    //dispoRecherchee.setDateRdv(Timestamp.valueOf(liste.get("dateRdv")));
+                    
+                    // Retirer le créneau de dispo de la liste des dispo commerciaux
+                    liste.get("estDispo").replace("estDispo=true", "estDispo=false");
+                    System.out.println("dispo maj : " + liste.get("estDispo").toString());
+                    //TODO : maj estDispo dans liste
+                      
+                    break loopRecherche;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("dispo recherchee :" + dispoRecherchee.toString());
+                
+        // Parcourir les affaires
+        for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
+            //Parcourir la liste des commandes pour chaque affaire
+            for (Commande cmd : a.getValue().getListeCommandes()){
+                // Récupérer l'affaire qui a cet id de commande dans la liste de commandes
+                if (cmd.getIdCommande().toString().equals(idCommande)){
+                    // Mettre à jour l'affaire et set le rdv commercial
+                    getAffaire(cmd.getIdAffaire()).setRdvCommercial(dispoRecherchee);
+                    System.out.println("dispo recherchee :" + dispoRecherchee.toString());
+                    System.out.println("affaire maj : " + getAffaire(cmd.getIdAffaire()).getRdvCommercial().toString());
+                }
+            }
+        }
     }
 
 }

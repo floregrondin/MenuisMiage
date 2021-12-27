@@ -92,8 +92,6 @@ public class ExpoCAResource {
         return Response.ok(this.gson.toJson(idAffaire)).build();
     }
     
-    
-
     @GET
     @Path("affaires")
     @Produces(MediaType.APPLICATION_JSON)
@@ -139,6 +137,17 @@ public class ExpoCAResource {
         Long idA = Long.valueOf(idAffaire);
 
         return Response.ok(this.gson.toJson(this.gestionCA.cloturerAffaire(idA))).build();
+    }
+    
+    @PUT
+    @Path("RDVCommerciaux/{idDispo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
+        //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
+        System.out.println("donné en param dispo : " + idDispo);
+        System.out.println("donné en param commande : " + idCommande);
+        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+        return Response.ok("OK : RDV Commercial pris.").build();
     }
 
 }
