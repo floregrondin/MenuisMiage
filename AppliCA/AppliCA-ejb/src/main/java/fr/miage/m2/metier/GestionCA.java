@@ -12,9 +12,14 @@ import fr.miage.m2.menuismiageshared.Commande;
 import fr.miage.m2.menuismiageshared.Disponibilite;
 import fr.miage.m2.menuismiageshared.EtatAffaire;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -183,6 +188,11 @@ public class GestionCA implements GestionCALocal {
         
     }
 
+    /**
+     * Permet de rajouter un rdv commercial à une affaire et de retirer le rdv commercial à la liste des disponibilités des commerciaux
+     * @param idCommande L'id de la commande associée à une affaire
+     * @param idDispo L'id de l'objet disponibiltié pour un rdv commercial
+     */
     @Override
     public void setEtatDispoCommerciaux(String idCommande, String idDispo) {
         System.out.println("dispo commerciaux : " + getAllDispoCommerciaux());
@@ -191,42 +201,54 @@ public class GestionCA implements GestionCALocal {
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, String>> mapDispoC;
         Disponibilite dispoRecherchee = new Disponibilite();
+        int i = 0;
+        int indexListe = 0;
         try {
             mapDispoC = mapper.readValue(getAllDispoCommerciaux(), new TypeReference<List<Map<String, String>>>() {});
             // Pour chaque disponibilité
-            loopRecherche:
             for (Map<String, String> liste : mapDispoC){
+                i++;
                 System.out.println("dispo dans la liste : " + liste.get("idDisponibilite"));
-                System.out.println("ma dispo : " + idDispo);
                 // Si elle contient l'attribut recherché
-                if (liste.get("idDisponibilite").equals(idDispo)){
+                if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
                     // Récupérer la disponibilité
                     System.out.println("je rentre : " + liste);
-                    System.out.println("idDispo : " + liste.get("idDisponibilite"));
                     dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
                     dispoRecherchee.setIdCommercial(Long.valueOf(liste.get("idCommercial")));
                     dispoRecherchee.setEstDispo(false);
-                    System.out.println("date : " + liste.get("dateRdv"));
-                    //dispoRecherchee.setDateRdv(Timestamp.valueOf(liste.get("dateRdv")));
-                    
-                    // Retirer le créneau de dispo de la liste des dispo commerciaux
-                    liste.get("estDispo").replace("estDispo=true", "estDispo=false");
-                    System.out.println("dispo maj : " + liste.get("estDispo").toString());
-                    //TODO : maj estDispo dans liste
-                      
-                    break loopRecherche;
+                    dispoRecherchee.setIdCommande(Long.valueOf(idCommande));
+                    // Formattage de la date String depuis Json -> Timestamp
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.US);
+                    Date parsedDate = dateFormat.parse(liste.get("dateRdv"));
+                    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+                    dispoRecherchee.setDateRdv(timestamp);  
+                    // MAJ l'état de la dispo dans la liste
+                    liste.put("estDispo", "false");
+                    // Récupérer l'index de la map pour supprimer plus tard de la liste des dispo
+                    indexListe = i-1;
                 }
             }
-        } catch (IOException ex) {
+            
+            // Retirer le créneau de dispo de la liste des dispo commerciaux
+            System.out.println("liste AVANT : " + mapDispoC.toString());
+            mapDispoC.remove(indexListe);
+            System.out.println("liste MAJ : " + mapDispoC.toString());
+            // liste.get("estDispo").replace("estDispo=true", "estDispo=false");
+            //System.out.println("dispo maj : " + liste.get("estDispo").toString());
+            //TODO : maj estDispo dans liste
+        } catch (IOException | ParseException ex) {
             Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        
+                    
         System.out.println("dispo recherchee :" + dispoRecherchee.toString());
                 
         // Parcourir les affaires
         for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
             //Parcourir la liste des commandes pour chaque affaire
             for (Commande cmd : a.getValue().getListeCommandes()){
+                System.out.println("commandes dans la liste : " + cmd.toString());
                 // Récupérer l'affaire qui a cet id de commande dans la liste de commandes
                 if (cmd.getIdCommande().toString().equals(idCommande)){
                     // Mettre à jour l'affaire et set le rdv commercial
