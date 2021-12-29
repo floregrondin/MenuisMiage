@@ -93,4 +93,6 @@ public class GestionAchat implements GestionAchatLocal {
         //Hors domaine --> Communication avec fournisseur
         System.out.println("ENVOI DE LA COMMANDE AU FOURNISSEUR");
     }
+    
+    
 }
