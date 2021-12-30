@@ -6,6 +6,8 @@
 package fr.miage.m2.expo;
 
 import fr.miage.m2.menuismiageshared.Commande;
+import fr.miage.m2.menuismiageshared.Disponibilite;
+import java.util.ArrayList;
 import javax.ejb.Local;
 
 /**
@@ -17,4 +19,5 @@ public interface ExpoCommercialeLocal {
     
     public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant);
     
+    public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites);
 }

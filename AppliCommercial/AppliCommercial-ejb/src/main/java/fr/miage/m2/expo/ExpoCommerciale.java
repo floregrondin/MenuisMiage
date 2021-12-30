@@ -6,7 +6,9 @@
 package fr.miage.m2.expo;
 
 import fr.miage.m2.menuismiageshared.Commande;
+import fr.miage.m2.menuismiageshared.Disponibilite;
 import fr.miage.m2.metier.GestionCommercialeLocal;
+import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -23,6 +25,11 @@ public class ExpoCommerciale implements ExpoCommercialeLocal {
     @Override
     public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant) {
         return this.gestionCommerciale.creerCommande(idAffaire, refCatalogue, cotes, montant);
+    }
+
+    @Override
+    public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites) {
+        this.gestionCommerciale.setListeDisponibilites(listeDisponibilites);    
     }
 
     

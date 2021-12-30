@@ -111,6 +111,7 @@ public class GestionCommerciale implements GestionCommercialeLocal {
         return this.listeDisponibilites;
     }
     
+    @Override
     public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites){
         this.listeDisponibilites = listeDisponibilites;
     }

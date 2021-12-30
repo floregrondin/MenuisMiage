@@ -6,12 +6,13 @@
 package fr.miage.m2.ws;
 
 import com.google.gson.Gson;
+import fr.miage.m2.menuismiageshared.Disponibilite;
 import fr.miage.m2.metier.GestionCommercialeLocal;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,6 +20,7 @@ import javax.ws.rs.PUT;
 import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -52,6 +54,16 @@ public class ExpoDispoCommerciauxResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getListeDispoCommerciaux() {
         return this.gson.toJson(this.gestionCommerciale.getListeDisponibilites());
+    }
+    
+    /**
+     * Permet de MAJ la liste des dispo des commerciaux (pour l'usage du CA)
+     * @param listeDispo La liste de disponibilités MAJ
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void setListeDispoCommerciaux(ArrayList<Disponibilite> listeDispo) {
+        this.gestionCommerciale.setListeDisponibilites(listeDispo);
     }
 
     /**

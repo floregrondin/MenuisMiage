@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -130,7 +131,7 @@ public class GestionCA implements GestionCALocal {
         System.out.println("Récupération de l'affaire : " + a);
         //TODO: Gérer directement dans l'expo WS/REST si id fourni n'existe pas en bd (dans notre liste)
         if (a == null) {
-            throw new Error("ERREUR : Affaire inexistante");
+            //throw new Error("ERREUR : Affaire inexistante");
         }
 
         // Mise à jour de l'état de l'affaire avec l'enum 
@@ -232,15 +233,23 @@ public class GestionCA implements GestionCALocal {
             // Retirer le créneau de dispo de la liste des dispo commerciaux
             System.out.println("liste AVANT : " + mapDispoC.toString());
             mapDispoC.remove(indexListe);
+            
+            ArrayList<Disponibilite> listeMaj = new ArrayList<>();
+            for (Map<String, String> liste : mapDispoC){
+                if (!liste.get("idDisponibilite").equals(dispoRecherchee.getIdDisponibilite().toString())){
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.US);
+                    Date parsedDate = dateFormat.parse(liste.get("dateRdv"));
+                    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+                    Disponibilite d = Disponibilite.disponibiliteCommercialMAJ(Long.valueOf(liste.get("idDisponibilite")), Long.valueOf(liste.get(("idCommercial"))), timestamp);
+                    listeMaj.add(d);
+                }
+            }
             System.out.println("liste MAJ : " + mapDispoC.toString());
-            // liste.get("estDispo").replace("estDispo=true", "estDispo=false");
-            //System.out.println("dispo maj : " + liste.get("estDispo").toString());
-            //TODO : maj estDispo dans liste
+            //TODO : maj la liste des dispo
+            setDispoCommerciaux(listeMaj);
         } catch (IOException | ParseException ex) {
             Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
                     
         System.out.println("dispo recherchee :" + dispoRecherchee.toString());
                 
@@ -258,6 +267,13 @@ public class GestionCA implements GestionCALocal {
                 }
             }
         }
+    }
+
+    @Override
+    public void setDispoCommerciaux(ArrayList<Disponibilite> listeDispo) {
+        Client client = ClientBuilder.newClient();
+        WebTarget wt = client.target("http://localhost:8080/AppliCommercial-web/webresources/ExpoDispoCommerciaux");
+        wt.request().accept(MediaType.APPLICATION_JSON).put(Entity.json(listeDispo));
     }
 
 }

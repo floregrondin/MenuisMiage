@@ -22,4 +22,6 @@ public interface GestionCommercialeLocal {
     public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant);
     
     public ArrayList<Disponibilite> getListeDisponibilites();
+    
+    public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites);
 }
