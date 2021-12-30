@@ -37,4 +37,7 @@ public interface GestionCALocal {
     public void associerCmdAffaire(Long refCatalogue, String cotes, double montant, Long idAffaire);
  
     public void setEtatDispoCommerciaux(String idCommande, String idDispo);
+    
+    public void updateDispoCommercial(String idDispo);
+    
 }

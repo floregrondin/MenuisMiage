@@ -21,7 +21,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * REST Web Service
@@ -60,10 +62,17 @@ public class ExpoDispoCommerciauxResource {
      * Permet de MAJ la liste des dispo des commerciaux (pour l'usage du CA)
      * @param listeDispo La liste de disponibilités MAJ
      */
-    @PUT
+    /**@PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void setListeDispoCommerciaux(ArrayList<Disponibilite> listeDispo) {
         this.gestionCommerciale.setListeDisponibilites(listeDispo);
+    }**/
+    
+    @PUT
+    @Path("{idDispo}")
+    public void updateDispo(@PathParam("idDispo") String idDispo) {
+        Long idD = Long.valueOf(idDispo);
+        this.gestionCommerciale.updateDisponibilite(idD);
     }
 
     /**

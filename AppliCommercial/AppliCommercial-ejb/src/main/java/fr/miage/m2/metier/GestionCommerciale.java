@@ -8,6 +8,7 @@ package fr.miage.m2.metier;
 import fr.miage.m2.menuismiageshared.Commande;
 import fr.miage.m2.menuismiageshared.Disponibilite;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,11 +44,10 @@ public class GestionCommerciale implements GestionCommercialeLocal {
     @Resource(mappedName = "InfosProduits")
     private Topic infosProduits;
 
-    
-    private ArrayList<Disponibilite> listeDisponibilites= null;
+    private ArrayList<Disponibilite> listeDisponibilites = null;
 
     @Override
-    public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant){
+    public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant) {
         // Création de l'objet cmd qu'on passera au MDB
         Commande cmd = new Commande(refCatalogue, cotes, montant, idAffaire);
         try {
@@ -56,7 +56,7 @@ public class GestionCommerciale implements GestionCommercialeLocal {
         } catch (JMSException ex) {
             Logger.getLogger(GestionCommerciale.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // Changer l'état de l'affaire à commandé
         Map<Long, String> majEtatAffaire = new HashMap<>();
         majEtatAffaire.put(idAffaire, "COMMANDEE");
@@ -65,10 +65,10 @@ public class GestionCommerciale implements GestionCommercialeLocal {
         } catch (JMSException ex) {
             Logger.getLogger(GestionCommerciale.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return cmd;
     }
-    
+
     private Message createJMSMessageForinfosProduits(Session session, Commande cmd) throws JMSException {
         ObjectMessage tm = session.createObjectMessage();
         // Envoi de l'objet commande
@@ -97,22 +97,28 @@ public class GestionCommerciale implements GestionCommercialeLocal {
             }
         }
     }
-    
-    
 
     @Override
     public ArrayList<Disponibilite> getListeDisponibilites() {
         // Création d'une liste de dispo par défaut
-        if(this.listeDisponibilites == null){
+        if (this.listeDisponibilites == null) {
             this.listeDisponibilites = new ArrayList<>();
             this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(1L, new Timestamp(1639065600000L)));
             this.listeDisponibilites.add(Disponibilite.disponibiliteCommercial(2L, new Timestamp(1639036800000L)));
+            return this.listeDisponibilites;
+        } else {
+            ArrayList<Disponibilite> listeDispos = new ArrayList<>();
+            for (Disponibilite d : this.listeDisponibilites) {
+                if (d.isEstDispo() == true) {
+                    listeDispos.add(d);
+                }
+            }
+            return listeDispos;
         }
-        return this.listeDisponibilites;
     }
-    
+
     @Override
-    public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites){
+    public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites) {
         this.listeDisponibilites = listeDisponibilites;
     }
 
@@ -145,5 +151,21 @@ public class GestionCommerciale implements GestionCommercialeLocal {
         }
     }
     
-    
+    @Override
+    public void updateDisponibilite (Long idDispo){
+        System.out.println("ID Param requete : "+idDispo);
+        if (this.listeDisponibilites != null){
+            System.out.println("Liste non null");
+            for(Disponibilite d : this.listeDisponibilites){
+                System.out.println("ID Dispo liste : "+d.getIdDisponibilite());
+                if (d.getIdDisponibilite().equals(idDispo)){
+                    
+                    d.setEstDispo(false);
+                }
+            }
+        } else {
+            //EXCEPTION LISTE INEXSITANTE
+        }
+    }
+
 }

@@ -196,6 +196,7 @@ public class GestionCA implements GestionCALocal {
      */
     @Override
     public void setEtatDispoCommerciaux(String idCommande, String idDispo) {
+        
         System.out.println("dispo commerciaux : " + getAllDispoCommerciaux());
                 
         // Parcourir les dispo commerciaux
@@ -274,6 +275,16 @@ public class GestionCA implements GestionCALocal {
         Client client = ClientBuilder.newClient();
         WebTarget wt = client.target("http://localhost:8080/AppliCommercial-web/webresources/ExpoDispoCommerciaux");
         wt.request().accept(MediaType.APPLICATION_JSON).put(Entity.json(listeDispo));
+    }
+    
+    @Override
+    public void updateDispoCommercial(String idDispo){
+        Client client = ClientBuilder.newClient();
+        //client.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
+        WebTarget wt = client.target("http://localhost:8080/AppliCommercial-web/webresources/ExpoDispoCommerciaux/"+idDispo);
+        Response response = wt
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(""));
     }
 
 }

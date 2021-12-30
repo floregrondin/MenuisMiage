@@ -24,4 +24,6 @@ public interface GestionCommercialeLocal {
     public ArrayList<Disponibilite> getListeDisponibilites();
     
     public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites);
+    
+    public void updateDisponibilite (Long idDispo);
 }
