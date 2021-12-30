@@ -40,4 +40,6 @@ public interface GestionCALocal {
     
     public void updateDispoCommercial(String idDispo);
     
+    public void updateDispoPoseur(String idDispo);
+    
 }

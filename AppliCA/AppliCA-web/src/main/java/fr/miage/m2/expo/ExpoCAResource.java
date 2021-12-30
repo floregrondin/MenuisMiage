@@ -153,5 +153,20 @@ public class ExpoCAResource {
         return Response.ok("OK : RDV Commercial pris.").build();
         * **/
     }
+    
+    @PUT
+    @Path("RDVPoseurs/{idDispo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
+        this.gestionCA.updateDispoPoseur(idDispo);
+        return Response.ok("OK : RDV Poseur pris.").build();
+        //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
+        /**
+        System.out.println("donné en param dispo : " + idDispo);
+        System.out.println("donné en param commande : " + idCommande);
+        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+        return Response.ok("OK : RDV Commercial pris.").build();
+        * **/
+    }
 
 }

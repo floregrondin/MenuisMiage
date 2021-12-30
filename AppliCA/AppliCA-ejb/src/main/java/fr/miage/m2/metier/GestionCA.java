@@ -286,5 +286,15 @@ public class GestionCA implements GestionCALocal {
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(""));
     }
+    
+    @Override
+    public void updateDispoPoseur(String idDispo){
+        Client client = ClientBuilder.newClient();
+        //client.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
+        WebTarget wt = client.target("http://localhost:8080/AppliPose-web/webresources/ExpoDispoPoseurs/"+idDispo);
+        Response response = wt
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(""));
+    }
 
 }

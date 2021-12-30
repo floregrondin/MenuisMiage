@@ -17,6 +17,8 @@ import javax.ws.rs.Path;
 import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -52,6 +54,13 @@ public class ExpoDispoPoseursResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getListeDispoPoseurs() {
         return this.gson.toJson(this.gestionPose.getListeDisponibilites());
+    }
+    
+    @PUT
+    @Path("{idDispo}")
+    public void updateDispo(@PathParam("idDispo") String idDispo) {
+        Long idD = Long.valueOf(idDispo);
+        this.gestionPose.updateDisponibilite(idD);
     }
 
     /**
