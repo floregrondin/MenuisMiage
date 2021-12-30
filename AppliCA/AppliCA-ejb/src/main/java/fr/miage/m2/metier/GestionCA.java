@@ -196,85 +196,48 @@ public class GestionCA implements GestionCALocal {
      */
     @Override
     public void setEtatDispoCommerciaux(String idCommande, String idDispo) {
-        
-        System.out.println("dispo commerciaux : " + getAllDispoCommerciaux());
-                
         // Parcourir les dispo commerciaux
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, String>> mapDispoC;
         Disponibilite dispoRecherchee = new Disponibilite();
-        int i = 0;
-        int indexListe = 0;
+        
         try {
             mapDispoC = mapper.readValue(getAllDispoCommerciaux(), new TypeReference<List<Map<String, String>>>() {});
             // Pour chaque disponibilité
             for (Map<String, String> liste : mapDispoC){
-                i++;
-                System.out.println("dispo dans la liste : " + liste.get("idDisponibilite"));
                 // Si elle contient l'attribut recherché
                 if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
                     // Récupérer la disponibilité
-                    System.out.println("je rentre : " + liste);
                     dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
                     dispoRecherchee.setIdCommercial(Long.valueOf(liste.get("idCommercial")));
                     dispoRecherchee.setEstDispo(false);
                     dispoRecherchee.setIdCommande(Long.valueOf(idCommande));
-                    // Formattage de la date String depuis Json -> Timestamp
+                    // Formattage de la date String depuis Json vers Timestamp
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.US);
                     Date parsedDate = dateFormat.parse(liste.get("dateRdv"));
                     Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
                     dispoRecherchee.setDateRdv(timestamp);  
                     // MAJ l'état de la dispo dans la liste
                     liste.put("estDispo", "false");
-                    // Récupérer l'index de la map pour supprimer plus tard de la liste des dispo
-                    indexListe = i-1;
+                    // Récupérer l'index de la dispo pour supprimer dans l'appli commerciale
+                    updateDispoPoseur(liste.get("idDisponibilite"));
                 }
             }
-            
-            // Retirer le créneau de dispo de la liste des dispo commerciaux
-            System.out.println("liste AVANT : " + mapDispoC.toString());
-            mapDispoC.remove(indexListe);
-            
-            ArrayList<Disponibilite> listeMaj = new ArrayList<>();
-            for (Map<String, String> liste : mapDispoC){
-                if (!liste.get("idDisponibilite").equals(dispoRecherchee.getIdDisponibilite().toString())){
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.US);
-                    Date parsedDate = dateFormat.parse(liste.get("dateRdv"));
-                    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
-                    Disponibilite d = Disponibilite.disponibiliteCommercialMAJ(Long.valueOf(liste.get("idDisponibilite")), Long.valueOf(liste.get(("idCommercial"))), timestamp);
-                    listeMaj.add(d);
-                }
-            }
-            System.out.println("liste MAJ : " + mapDispoC.toString());
-            //TODO : maj la liste des dispo
-            setDispoCommerciaux(listeMaj);
         } catch (IOException | ParseException ex) {
             Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
                     
-        System.out.println("dispo recherchee :" + dispoRecherchee.toString());
-                
         // Parcourir les affaires
         for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
             //Parcourir la liste des commandes pour chaque affaire
             for (Commande cmd : a.getValue().getListeCommandes()){
-                System.out.println("commandes dans la liste : " + cmd.toString());
                 // Récupérer l'affaire qui a cet id de commande dans la liste de commandes
                 if (cmd.getIdCommande().toString().equals(idCommande)){
                     // Mettre à jour l'affaire et set le rdv commercial
                     getAffaire(cmd.getIdAffaire()).setRdvCommercial(dispoRecherchee);
-                    System.out.println("dispo recherchee :" + dispoRecherchee.toString());
-                    System.out.println("affaire maj : " + getAffaire(cmd.getIdAffaire()).getRdvCommercial().toString());
                 }
             }
         }
-    }
-
-    @Override
-    public void setDispoCommerciaux(ArrayList<Disponibilite> listeDispo) {
-        Client client = ClientBuilder.newClient();
-        WebTarget wt = client.target("http://localhost:8080/AppliCommercial-web/webresources/ExpoDispoCommerciaux");
-        wt.request().accept(MediaType.APPLICATION_JSON).put(Entity.json(listeDispo));
     }
     
     @Override
@@ -297,4 +260,50 @@ public class GestionCA implements GestionCALocal {
                 .put(Entity.json(""));
     }
 
+    @Override
+    public void setEtatDispoPoseurs(String idCommande, String idDispo){
+        // Parcourir les dispo poseurs
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, String>> mapDispoC;
+        Disponibilite dispoRecherchee = new Disponibilite();
+        
+        try {
+            mapDispoC = mapper.readValue(getAllDispoPoseurs(), new TypeReference<List<Map<String, String>>>() {});
+            // Pour chaque disponibilité
+            for (Map<String, String> liste : mapDispoC){
+                // Si elle contient l'attribut recherché
+                System.out.println("liste dispo pose : " + liste.toString());
+                if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
+                    // Récupérer la disponibilité
+                    dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
+                    dispoRecherchee.setIdEquipePose(Long.valueOf(liste.get("idEquipePose")));
+                    dispoRecherchee.setEstDispo(false);
+                    dispoRecherchee.setIdCommande(Long.valueOf(idCommande));
+                    // Formattage de la date String depuis Json vers Timestamp
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.US);
+                    Date parsedDate = dateFormat.parse(liste.get("dateRdv"));
+                    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+                    dispoRecherchee.setDateRdv(timestamp);  
+                    // MAJ l'état de la dispo dans la liste
+                    liste.put("estDispo", "false");
+                    // Récupérer l'index de la dispo pour supprimer dans l'appli pose
+                    updateDispoPoseur(liste.get("idDisponibilite"));
+                }
+            }
+        } catch (IOException | ParseException ex) {
+            Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                    
+        // Parcourir les affaires
+        for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
+            //Parcourir la liste des commandes pour chaque affaire
+            for (Commande cmd : a.getValue().getListeCommandes()){
+                // Récupérer l'affaire qui a cet id de commande dans la liste de commandes
+                if (cmd.getIdCommande().toString().equals(idCommande)){
+                    // Mettre à jour l'affaire et set le rdv commercial
+                    getAffaire(cmd.getIdAffaire()).setRdvPose(dispoRecherchee);
+                }
+            }
+        } 
+    }
 }

@@ -6,8 +6,6 @@
 package fr.miage.m2.metier;
 
 import fr.miage.m2.menuismiageshared.Affaire;
-import fr.miage.m2.menuismiageshared.Disponibilite;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javax.ejb.Local;
 
@@ -23,9 +21,7 @@ public interface GestionCALocal {
     public HashMap<Long, Affaire> getAllAffaires();
     
     public String getAllDispoCommerciaux();
-    
-    public void setDispoCommerciaux(ArrayList<Disponibilite> listeDispo);
-        
+            
     public String getAllDispoPoseurs();
     
     public Affaire getAffaire(Long idAffaire);
@@ -38,6 +34,8 @@ public interface GestionCALocal {
  
     public void setEtatDispoCommerciaux(String idCommande, String idDispo);
     
+    public void setEtatDispoPoseurs(String idCommande, String idDispo);
+
     public void updateDispoCommercial(String idDispo);
     
     public void updateDispoPoseur(String idDispo);

@@ -143,7 +143,7 @@ public class ExpoCAResource {
     @Path("RDVCommerciaux/{idDispo}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
-        this.gestionCA.updateDispoCommercial(idDispo);
+        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
         return Response.ok("OK : RDV Commercial pris.").build();
         //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
         /**
@@ -158,7 +158,7 @@ public class ExpoCAResource {
     @Path("RDVPoseurs/{idDispo}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
-        this.gestionCA.updateDispoPoseur(idDispo);
+        this.gestionCA.setEtatDispoPoseurs(idCommande, idDispo);
         return Response.ok("OK : RDV Poseur pris.").build();
         //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
         /**
