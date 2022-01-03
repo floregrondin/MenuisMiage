@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.miage.m2.menuismiageshared.Affaire;
 import fr.miage.m2.menuismiageshared.Commande;
 import fr.miage.m2.menuismiageshared.Disponibilite;
-import fr.miage.m2.menuismiageshared.EtatAffaire;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -134,6 +133,7 @@ public class GestionCA implements GestionCALocal {
             //throw new Error("ERREUR : Affaire inexistante");
         }
 
+        /*
         // Mise à jour de l'état de l'affaire avec l'enum 
         // TODO: Essayer de faire avant l'envoi dans JMS
         if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())) {
@@ -144,7 +144,7 @@ public class GestionCA implements GestionCALocal {
             a.setEtatAffaire(EtatAffaire.POSEE);
         }else if(etatAffaire.equals(EtatAffaire.CLOTUREE.toString())){
             a.setEtatAffaire(EtatAffaire.CLOTUREE);
-        } 
+        } */
     }
 
     /**
@@ -204,10 +204,12 @@ public class GestionCA implements GestionCALocal {
         try {
             mapDispoC = mapper.readValue(getAllDispoCommerciaux(), new TypeReference<List<Map<String, String>>>() {});
             // Pour chaque disponibilité
+            System.out.println("liste des dispo : " + mapDispoC.toString());
             for (Map<String, String> liste : mapDispoC){
                 // Si elle contient l'attribut recherché
                 if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
                     // Récupérer la disponibilité
+                    System.out.println("JE RENTRE");
                     dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
                     dispoRecherchee.setIdCommercial(Long.valueOf(liste.get("idCommercial")));
                     dispoRecherchee.setEstDispo(false);
@@ -220,7 +222,8 @@ public class GestionCA implements GestionCALocal {
                     // MAJ l'état de la dispo dans la liste
                     liste.put("estDispo", "false");
                     // Récupérer l'index de la dispo pour supprimer dans l'appli commerciale
-                    updateDispoPoseur(liste.get("idDisponibilite"));
+                    System.out.println("mon id commercial : " + liste.get("idDisponibilite"));
+                    updateDispoCommercial(liste.get("idDisponibilite"));
                 }
             }
         } catch (IOException | ParseException ex) {
