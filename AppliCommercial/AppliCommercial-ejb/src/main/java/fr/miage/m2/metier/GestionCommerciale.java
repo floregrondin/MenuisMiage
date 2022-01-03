@@ -8,10 +8,7 @@ package fr.miage.m2.metier;
 import fr.miage.m2.menuismiageshared.Commande;
 import fr.miage.m2.menuismiageshared.Disponibilite;
 import java.sql.Timestamp;
-import java.time.Clock;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -22,11 +19,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
-import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
-import javax.naming.NamingException;
 
 /**
  *
@@ -34,9 +28,6 @@ import javax.naming.NamingException;
  */
 @Stateless
 public class GestionCommerciale implements GestionCommercialeLocal {
-
-    @Resource(mappedName = "EtatCommande")
-    private Queue etatCommande;
 
     @Resource(mappedName = "MenuisMiage")
     private ConnectionFactory menuisMiage;
@@ -56,16 +47,7 @@ public class GestionCommerciale implements GestionCommercialeLocal {
         } catch (JMSException ex) {
             Logger.getLogger(GestionCommerciale.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        // Changer l'état de l'affaire à commandé
-        Map<Long, String> majEtatAffaire = new HashMap<>();
-        majEtatAffaire.put(idAffaire, "COMMANDEE");
-        try {
-            sendJMSMessageToEtatCommande(majEtatAffaire);
-        } catch (JMSException ex) {
-            Logger.getLogger(GestionCommerciale.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        
         return cmd;
     }
 
@@ -120,35 +102,6 @@ public class GestionCommerciale implements GestionCommercialeLocal {
     @Override
     public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites) {
         this.listeDisponibilites = listeDisponibilites;
-    }
-
-    private Message createJMSMessageForetatCommande(Session session, Object messageData) throws JMSException {
-        // TODO create and populate message to send
-        TextMessage tm = session.createTextMessage();
-        tm.setText(messageData.toString());
-        return tm;
-    }
-
-    private void sendJMSMessageToEtatCommande(Object messageData) throws JMSException {
-        Connection connection = null;
-        Session session = null;
-        try {
-            connection = menuisMiage.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            MessageProducer messageProducer = session.createProducer(etatCommande);
-            messageProducer.send(createJMSMessageForetatCommande(session, messageData));
-        } finally {
-            if (session != null) {
-                try {
-                    session.close();
-                } catch (JMSException e) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot close session", e);
-                }
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        }
     }
     
     @Override

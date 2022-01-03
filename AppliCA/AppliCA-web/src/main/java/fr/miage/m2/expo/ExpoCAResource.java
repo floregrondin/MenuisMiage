@@ -145,5 +145,35 @@ public class ExpoCAResource {
         return Response.ok(this.gson.toJson(this.gestionCA.cloturerAffaire(idA))).build();
     }
     
+    @PUT
+    @Path("RDVCommerciaux/{idDispo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
+        System.out.println("mon id dispo : " + idDispo);
+        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+        return Response.ok("RDV Commercial pris.").build();
+        //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
+        /**
+        System.out.println("donné en param dispo : " + idDispo);
+        System.out.println("donné en param commande : " + idCommande);
+        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+        return Response.ok("OK : RDV Commercial pris.").build();
+        * **/
+    }
+    
+    @PUT
+    @Path("RDVPoseurs/{idDispo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
+        this.gestionCA.setEtatDispoPoseurs(idCommande, idDispo);
+        return Response.ok("RDV Poseur pris.").build();
+        //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
+        /**
+        System.out.println("donné en param dispo : " + idDispo);
+        System.out.println("donné en param commande : " + idCommande);
+        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+        return Response.ok("OK : RDV Commercial pris.").build();
+        * **/
+    }
 
 }

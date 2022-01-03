@@ -75,11 +75,37 @@ public class GestionPose implements GestionPoseLocal {
             this.listeDisponibilites = new ArrayList<>();
             this.listeDisponibilites.add(Disponibilite.disponibilitePose(1L, new Timestamp(1639065600000L)));
             this.listeDisponibilites.add(Disponibilite.disponibilitePose(2L, new Timestamp(1639036800000L)));
-        }
         return this.listeDisponibilites;
+        }else {
+            ArrayList<Disponibilite> listeDispos = new ArrayList<>();
+            for (Disponibilite d : this.listeDisponibilites) {
+                if (d.isEstDispo() == true) {
+                    listeDispos.add(d);
+                }
+            }
+            return listeDispos;
+        }
     }
     
     public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites){
         this.listeDisponibilites = listeDisponibilites;
     }
+    
+    @Override
+    public void updateDisponibilite (Long idDispo){
+        System.out.println("ID Param requete : "+idDispo);
+        if (this.listeDisponibilites != null){
+            System.out.println("Liste non null");
+            for(Disponibilite d : this.listeDisponibilites){
+                System.out.println("ID Dispo liste : "+d.getIdDisponibilite());
+                if (d.getIdDisponibilite().equals(idDispo)){
+                    
+                    d.setEstDispo(false);
+                }
+            }
+        } else {
+            //EXCEPTION LISTE INEXSITANTE
+        }
+    }
+    
 }

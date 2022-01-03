@@ -38,6 +38,10 @@ public class ListenerEtatCommande implements MessageListener {
 
         try {
             String[] argsMess = message.getBody(String.class).replace("{", "").replace("}","").split("=");
+            System.out.println("mon message : " + message.toString());
+            System.out.println("arg message idAffaire en Long : " + Long.valueOf(argsMess[0]));
+            System.out.println("arg message etatAffaire : " + argsMess[1]);
+
             this.gestionCA.updateEtatAffaireByIdAffaire(Long.valueOf(argsMess[0]), argsMess[1]);
         } catch (JMSException ex) {
             Logger.getLogger(ListenerEtatCommande.class.getName()).log(Level.SEVERE, null, ex);

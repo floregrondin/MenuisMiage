@@ -46,15 +46,6 @@ public class Disponibilite {
         d.setEstDispo(true);
         return d;
     }
-    
-    public static Disponibilite disponibiliteCommercialMAJ(Long idDisponibilite, Long idCommercial, Timestamp dateRdv) {
-        Disponibilite d = new Disponibilite();
-        d.setIdDisponibilite(idDisponibilite);
-        d.setIdCommercial(idCommercial);
-        d.setDateRdv(dateRdv);
-        d.setEstDispo(true);
-        return d;
-    }
 
     /**
      * Constructeur pour déclarer la disponibilité d'une équipe de pose
