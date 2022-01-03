@@ -6,7 +6,6 @@
 package fr.miage.m2.ws;
 
 import fr.miage.m2.expo.ExpoCommercialeLocal;
-import fr.miage.m2.menuismiageshared.Commande;
 import javax.ejb.EJB;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -24,16 +23,22 @@ public class WSCommerciale {
     private ExpoCommercialeLocal expoCommerciale;
 
     /**
-     * 
-     * @param idAffaire
+     * Permet de créer une commande rattachée à une affaire
+     * @param idAffaire Id de l'affaire devant exister en base
      * @param refCatalogue
      * @param cotes
      * @param montant
      * @return 
      */
     @WebMethod(operationName = "creerCommande")
-    public Commande creerCommande(@WebParam(name = "idAffaire") Long idAffaire, @WebParam(name = "refCatalogue") Long refCatalogue, @WebParam(name = "cotes") String cotes, @WebParam(name = "montant") double montant) {
-        return this.expoCommerciale.creerCommande(idAffaire, refCatalogue, cotes, montant);
+    public Long creerCommande(@WebParam(name = "idAffaire") Long idAffaire, @WebParam(name = "refCatalogue") Long refCatalogue, @WebParam(name = "cotes") String cotes, @WebParam(name = "montant") double montant) throws Exception {
+        // Vérifier que l'affaire existe en base
+        // Si 404 alors paramètre côté REST est incorrect
+        if (this.expoCommerciale.getAffaireByIdAffaire(idAffaire) == null
+                || this.expoCommerciale.getAffaireByIdAffaire(idAffaire).contains("404")){
+            throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
+        }
+        return this.expoCommerciale.creerCommande(idAffaire, refCatalogue, cotes, montant).getIdCommande();
         //return "OK";
     }
 

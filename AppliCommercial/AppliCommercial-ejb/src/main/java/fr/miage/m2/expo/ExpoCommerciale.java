@@ -32,6 +32,10 @@ public class ExpoCommerciale implements ExpoCommercialeLocal {
         this.gestionCommerciale.setListeDisponibilites(listeDisponibilites);    
     }
 
+    @Override
+    public String getAffaireByIdAffaire(Long idAffaire) {
+        return this.gestionCommerciale.getAffaireByIdAffaire(idAffaire);
+    }
     
     
 }

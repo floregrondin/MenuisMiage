@@ -20,4 +20,7 @@ public interface ExpoCommercialeLocal {
     public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant);
     
     public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites);
+
+    public String getAffaireByIdAffaire(Long idAffaire);
+
 }

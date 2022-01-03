@@ -131,6 +131,23 @@ public class ExpoCAResource {
         return Response.ok(response).build();
     }
     
+    @GET
+    @Path("affaires/{idAffaire}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAffaireByIdAffaire(@PathParam("idAffaire") String idAffaire) throws Exception {
+        try {
+            String response = this.gson.toJson(this.gestionCA.getAffaireByIdAffaire(Long.valueOf(idAffaire)));
+
+            if (response == null){
+                return Response.status(404).build();
+            }
+            return Response.ok(response).build();
+        } catch (Exception ex){
+            return Response.status(404).build();
+        }
+
+    }
+    
     
     /**
      * Permet de cloturer une affaire

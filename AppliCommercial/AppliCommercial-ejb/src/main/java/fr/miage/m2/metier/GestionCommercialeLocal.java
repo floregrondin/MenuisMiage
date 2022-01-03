@@ -26,4 +26,7 @@ public interface GestionCommercialeLocal {
     public void setListeDisponibilites(ArrayList<Disponibilite> listeDisponibilites);
     
     public void updateDisponibilite (Long idDispo);
+    
+    public String getAffaireByIdAffaire(Long idAffaire);
+    
 }

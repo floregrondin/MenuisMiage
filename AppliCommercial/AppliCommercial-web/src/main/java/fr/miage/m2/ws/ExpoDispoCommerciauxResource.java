@@ -6,9 +6,7 @@
 package fr.miage.m2.ws;
 
 import com.google.gson.Gson;
-import fr.miage.m2.menuismiageshared.Disponibilite;
 import fr.miage.m2.metier.GestionCommercialeLocal;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
@@ -20,10 +18,8 @@ import javax.ws.rs.PUT;
 import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  * REST Web Service
@@ -58,31 +54,12 @@ public class ExpoDispoCommerciauxResource {
         return this.gson.toJson(this.gestionCommerciale.getListeDisponibilites());
     }
     
-    /**
-     * Permet de MAJ la liste des dispo des commerciaux (pour l'usage du CA)
-     * @param listeDispo La liste de disponibilités MAJ
-     */
-    /**@PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void setListeDispoCommerciaux(ArrayList<Disponibilite> listeDispo) {
-        this.gestionCommerciale.setListeDisponibilites(listeDispo);
-    }**/
-    
     @PUT
     @Path("{idDispo}")
     public void updateDispo(@PathParam("idDispo") String idDispo) {
         Long idD = Long.valueOf(idDispo);
         this.gestionCommerciale.updateDisponibilite(idD);
     }
-
-    /**
-     * PUT method for updating or creating an instance of ExpoDispoCommerciauxResource
-     * @param content representation for the resource
-     */
-    //@PUT
-    //@Consumes(MediaType.APPLICATION_JSON)
-    //public void putJson(String content) {
-    //}
 
     private GestionCommercialeLocal lookupGestionCommercialeLocal() {
         try {

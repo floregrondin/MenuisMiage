@@ -41,4 +41,7 @@ public interface GestionCALocal {
     public void updateDispoPoseur(String idDispo);
 
     public Affaire getAffaireByIdCommande(Long idCmd) throws Exception;
+
+    public Affaire getAffaireByIdAffaire(Long idAffaire) throws Exception;
+
 }

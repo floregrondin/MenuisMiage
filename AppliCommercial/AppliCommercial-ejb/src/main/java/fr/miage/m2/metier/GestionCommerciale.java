@@ -21,6 +21,11 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -119,6 +124,18 @@ public class GestionCommerciale implements GestionCommercialeLocal {
         } else {
             //EXCEPTION LISTE INEXSITANTE
         }
+    }
+    
+    @Override
+    public String getAffaireByIdAffaire(Long idAffaire) {
+        Client client = ClientBuilder.newClient();
+        WebTarget wt = client.target("http://localhost:8080/AppliCA-web/webresources/ExpoCA/affaires/"+idAffaire.toString());
+        Response response = wt
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        String json = response.readEntity(String.class);
+        return json;
     }
 
 }

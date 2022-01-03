@@ -319,4 +319,17 @@ public class GestionCA implements GestionCALocal {
         System.out.println("PAS DE CMD");
         return null;
     }
+    
+    @Override
+    public Affaire getAffaireByIdAffaire(Long idAffaire) throws Exception{
+        if(getAllAffaires().isEmpty()){
+            throw new Exception("ERREUR : AFFAIRE INEXISTANTE");
+        }
+        for (Affaire aff : getAllAffaires().values()){
+            if (aff.getIdAffaire().toString().equals(idAffaire.toString())){
+                return aff;
+            }
+        }
+        throw new Exception("ERREUR : AFFAIRE INEXISTANTE");
+    }
 }
