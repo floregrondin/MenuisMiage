@@ -20,6 +20,11 @@ import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -94,5 +99,16 @@ public class GestionAchat implements GestionAchatLocal {
         System.out.println("ENVOI DE LA COMMANDE AU FOURNISSEUR");
     }
     
+    @Override
+    public String getAffaireByIdCommande(Long idCommande) {
+        Client client = ClientBuilder.newClient();
+        WebTarget wt = client.target("http://localhost:8080/AppliCA-web/webresources/ExpoCA/commandes/"+idCommande.toString());
+        Response response = wt
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        String json = response.readEntity(String.class);
+        return json;
+    }
     
 }

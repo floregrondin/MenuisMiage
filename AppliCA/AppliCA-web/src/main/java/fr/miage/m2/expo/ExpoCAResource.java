@@ -117,41 +117,33 @@ public class ExpoCAResource {
         String response = this.gson.toJson(this.gestionCA.getAllDispoPoseurs());
         response = response.replace("\\", "");
         response = response.substring( 1, response.length() - 1 );
-        //System.out.println("ICI : " + response);
         return Response.ok(response).build();
     }
     
+    @GET
+    @Path("commandes/{idCommande}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAffaireByIdCommande(@PathParam("idCommande") String idCommande) {
+        //String response = this.gson.toJson(this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande)));
+        return Response.ok("ok").build();
+    }
     
-        /**
-     * Permet de cloturer une affaire. Pour l'appeler on doit utiliser une URL du type :
-     * http://localhost:8080/banque_rest-web/AppliCA-web/webresources/ExpoCA/cloturerAffaire/1
-     *
+    
+    /**
+     * Permet de cloturer une affaire
      * @param idAffaire l'affaire
-     *
      * @return "ok. Affaire cloturée."
      */
     @PUT
-    @Path("cloturerAffaire/{idAffaire}")
+    @Path("affaires/{idAffaire}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response cloturerAffaire(@PathParam("idAffaire") String idAffaire) {
         Long idA = Long.valueOf(idAffaire);
-
+        if (this.gestionCA.getAffaire(idA) == null){
+            return Response.status(404).build();
+        }
         return Response.ok(this.gson.toJson(this.gestionCA.cloturerAffaire(idA))).build();
     }
     
-    @PUT
-    @Path("RDVCommerciaux/{idDispo}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
-        this.gestionCA.updateDispoCommercial(idDispo);
-        return Response.ok("OK : RDV Commercial pris.").build();
-        //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
-        /**
-        System.out.println("donné en param dispo : " + idDispo);
-        System.out.println("donné en param commande : " + idCommande);
-        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
-        return Response.ok("OK : RDV Commercial pris.").build();
-        * **/
-    }
 
 }

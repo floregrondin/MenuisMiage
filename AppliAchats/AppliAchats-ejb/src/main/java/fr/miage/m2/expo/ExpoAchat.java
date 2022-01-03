@@ -23,12 +23,13 @@ public class ExpoAchat implements ExpoAchatLocal {
     public void validerCommandePassee(Long idAffaire) {
         this.gestionAchat.validerCommandePassee(idAffaire);
     }
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-
     @Override
     public void validerReceptionCommande(Long idAffaire) {
         this.gestionAchat.validerReceptionCommande(idAffaire);
+    }
+    
+    @Override
+    public String getAffaireByIdCommande(Long idCommande){
+        return this.gestionAchat.getAffaireByIdCommande(idCommande);
     }
 }
