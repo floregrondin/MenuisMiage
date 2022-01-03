@@ -21,5 +21,5 @@ public interface GestionAchatLocal {
 
     public void passerCommande(Commande cmd);
 
-    public String getAffaireByIdCommande(Long idCommande);
+    public String getAffaireByIdAffaire(Long idAffaire);
 }

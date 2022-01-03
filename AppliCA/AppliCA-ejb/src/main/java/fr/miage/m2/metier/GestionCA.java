@@ -204,7 +204,7 @@ public class GestionCA implements GestionCALocal {
     }
 
     @Override
-    public void setEtatDispoCommerciaux(String idCommande, String idDispo) {
+    public void setEtatDispoCommerciaux(String idAffaire, String idDispo) {
         // Parcourir les dispo commerciaux
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, String>> mapDispoC;
@@ -220,7 +220,7 @@ public class GestionCA implements GestionCALocal {
                     dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
                     dispoRecherchee.setIdCommercial(Long.valueOf(liste.get("idCommercial")));
                     dispoRecherchee.setEstDispo(false);
-                    dispoRecherchee.setIdCommande(Long.valueOf(idCommande));
+                    dispoRecherchee.setIdAffaire(Long.valueOf(idAffaire));
                     // Formattage de la date String depuis Json vers Timestamp
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.US);
                     Date parsedDate = dateFormat.parse(liste.get("dateRdv"));
@@ -238,12 +238,12 @@ public class GestionCA implements GestionCALocal {
                     
         // Parcourir les affaires
         for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
-            //Parcourir la liste des commandes pour chaque affaire
-            for (Commande cmd : a.getValue().getListeCommandes()){
-                // Récupérer l'affaire qui a cet id de commande dans la liste de commandes
-                if (cmd.getIdCommande().toString().equals(idCommande)){
-                    // Mettre à jour l'affaire et set le rdv commercial
-                    getAffaire(cmd.getIdAffaire()).setRdvCommercial(dispoRecherchee);
+            // Récupérer l'affaire dont l'id a été fourni par l'utilisateur
+            if (idAffaire.equals(a.getValue().getIdAffaire().toString())){;
+                try {
+                    getAffaireByIdAffaire(Long.valueOf(idAffaire)).setRdvCommercial(dispoRecherchee);
+                } catch (Exception ex) {
+                    Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -270,7 +270,7 @@ public class GestionCA implements GestionCALocal {
     }
 
     @Override
-    public void setEtatDispoPoseurs(String idCommande, String idDispo){
+    public void setEtatDispoPoseurs(String idAffaire, String idDispo){
         // Parcourir les dispo poseurs
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, String>> mapDispoC;
@@ -286,7 +286,7 @@ public class GestionCA implements GestionCALocal {
                     dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
                     dispoRecherchee.setIdEquipePose(Long.valueOf(liste.get("idEquipePose")));
                     dispoRecherchee.setEstDispo(false);
-                    dispoRecherchee.setIdCommande(Long.valueOf(idCommande));
+                    dispoRecherchee.setIdAffaire(Long.valueOf(idAffaire));
                     // Formattage de la date String depuis Json vers Timestamp
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.US);
                     Date parsedDate = dateFormat.parse(liste.get("dateRdv"));
@@ -304,12 +304,12 @@ public class GestionCA implements GestionCALocal {
                     
         // Parcourir les affaires
         for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
-            //Parcourir la liste des commandes pour chaque affaire
-            for (Commande cmd : a.getValue().getListeCommandes()){
-                // Récupérer l'affaire qui a cet id de commande dans la liste de commandes
-                if (cmd.getIdCommande().toString().equals(idCommande)){
-                    // Mettre à jour l'affaire et set le rdv commercial
-                    getAffaire(cmd.getIdAffaire()).setRdvPose(dispoRecherchee);
+            // Récupérer l'affaire dont l'id a été fourni par l'utilisateur
+            if (idAffaire.equals(a.getValue().getIdAffaire().toString())){
+                try {
+                    getAffaireByIdAffaire(Long.valueOf(idAffaire)).setRdvPose(dispoRecherchee);
+                } catch (Exception ex) {
+                    Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } 

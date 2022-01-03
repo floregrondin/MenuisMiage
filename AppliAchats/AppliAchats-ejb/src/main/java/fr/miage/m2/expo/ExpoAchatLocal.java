@@ -18,5 +18,5 @@ public interface ExpoAchatLocal {
     
     public void validerReceptionCommande(Long idAffaire);
     
-    public String getAffaireByIdCommande(Long idCommande);
+    public String getAffaireByIdAffaire(Long idAffaire);
 }

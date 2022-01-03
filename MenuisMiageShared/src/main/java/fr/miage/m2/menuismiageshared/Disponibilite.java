@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public class Disponibilite {
     private Long idDisponibilite;
-    private Long idCommande;
+    private Long idAffaire;
     private Long idCommercial;
     private Long idEquipePose;
     private boolean estDispo;
@@ -149,17 +149,17 @@ public class Disponibilite {
         this.dateRdv = dateRdv;
     }
 
-    public Long getIdCommande() {
-        return idCommande;
+    public Long getIdAffaire() {
+        return idAffaire;
     }
 
-    public void setIdCommande(Long idCommande) {
-        this.idCommande = idCommande;
+    public void setIdAffaire(Long idAffaire) {
+        this.idAffaire = idAffaire;
     }
 
     @Override
     public String toString() {
-        return "Disponibilite{" + "idDisponibilite=" + idDisponibilite + ", idCommande=" + idCommande + ", idCommercial=" + idCommercial + ", idEquipePose=" + idEquipePose + ", estDispo=" + estDispo + ", dateRdv=" + dateRdv + '}';
+        return "Disponibilite{" + "idDisponibilite=" + idDisponibilite + ", idAffaire=" + idAffaire + ", idCommercial=" + idCommercial + ", idEquipePose=" + idEquipePose + ", estDispo=" + estDispo + ", dateRdv=" + dateRdv + '}';
     }
     
     

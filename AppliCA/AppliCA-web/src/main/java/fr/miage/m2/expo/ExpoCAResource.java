@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
@@ -50,29 +49,6 @@ public class ExpoCAResource {
      */
     public ExpoCAResource() {
         this.gson = new Gson();
-    }
-
-    /**
-     * Retrieves representation of an instance of
-     * fr.miage.m2.exposition.ExpoCAResource
-     *
-     * @return an instance of java.lang.String
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getJson() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * PUT method for updating or creating an instance of ExpoCAResource
-     *
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
     }
 
     private GestionCALocal lookupGestionCALocal() {
@@ -149,9 +125,7 @@ public class ExpoCAResource {
         } catch (Exception ex){
             return Response.status(404).build();
         }
-
     }
-    
     
     /**
      * Permet de cloturer une affaire
@@ -172,8 +146,8 @@ public class ExpoCAResource {
     @PUT
     @Path("RDVCommerciaux/{idDispo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) throws Exception {
-        Affaire aff = this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande));
+    public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idAffaire") String idAffaire) throws Exception {
+        Affaire aff = this.gestionCA.getAffaireByIdAffaire(Long.valueOf(idAffaire));
         
         if (aff == null
                 || aff.toString().contains("Not Found")){
@@ -191,7 +165,7 @@ public class ExpoCAResource {
                 
         if ("CREEE".equals(aff.getEtatAffaire().toString())){
             // Maj l'état de l'affaire
-            this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+            this.gestionCA.setEtatDispoCommerciaux(idAffaire, idDispo);
         } else {
             System.out.println("ERREUR : AFFAIRE NE NECESSITE PAS UN RDV COMMERCIAL");
             return Response.status(401).build();
@@ -203,8 +177,8 @@ public class ExpoCAResource {
     @PUT
     @Path("RDVPoseurs/{idDispo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) throws Exception {
-        Affaire aff = this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande));
+    public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idAffaire") String idAffaire) throws Exception {
+        Affaire aff = this.gestionCA.getAffaireByIdAffaire(Long.valueOf(idAffaire));
         
         if (aff == null
                 || aff.toString().contains("Not Found")){
@@ -214,12 +188,12 @@ public class ExpoCAResource {
         
         if ("RECEPTIONNEE".equals(aff.getEtatAffaire().toString())){
             // Maj l'état de l'affaire
-            this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+            this.gestionCA.setEtatDispoCommerciaux(idAffaire, idDispo);
         } else {
             System.out.println("ERREUR : AFFAIRE NE NECESSITE PAS UN RDV DE POSE");
             return Response.status(401).build();
         }
-        this.gestionCA.setEtatDispoPoseurs(idCommande, idDispo);
+        this.gestionCA.setEtatDispoPoseurs(idAffaire, idDispo);
         return Response.ok("RDV Poseur pris.").build();
     }
 

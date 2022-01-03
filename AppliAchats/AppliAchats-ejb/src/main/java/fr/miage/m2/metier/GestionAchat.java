@@ -100,9 +100,9 @@ public class GestionAchat implements GestionAchatLocal {
     }
     
     @Override
-    public String getAffaireByIdCommande(Long idCommande) {
+    public String getAffaireByIdAffaire(Long idAffaire) {
         Client client = ClientBuilder.newClient();
-        WebTarget wt = client.target("http://localhost:8080/AppliCA-web/webresources/ExpoCA/commandes/"+idCommande.toString());
+        WebTarget wt = client.target("http://localhost:8080/AppliCA-web/webresources/ExpoCA/affaires/"+idAffaire.toString());
         Response response = wt
                 .request(MediaType.APPLICATION_JSON)
                 .get();

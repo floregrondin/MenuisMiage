@@ -29,7 +29,7 @@ public class ExpoAchat implements ExpoAchatLocal {
     }
     
     @Override
-    public String getAffaireByIdCommande(Long idCommande){
-        return this.gestionAchat.getAffaireByIdCommande(idCommande);
+    public String getAffaireByIdAffaire(Long idAffaire){
+        return this.gestionAchat.getAffaireByIdAffaire(idAffaire);
     }
 }

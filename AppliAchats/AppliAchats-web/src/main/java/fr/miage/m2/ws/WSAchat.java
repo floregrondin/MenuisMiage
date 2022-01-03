@@ -28,20 +28,20 @@ public class WSAchat {
      * @throws java.lang.Exception Si l'id commande ne correspond à aucune commande répertoriée
      */
     @WebMethod(operationName = "validerCommandePassee")
-    public String validerCommandePassee(@WebParam(name = "idCommande") Long idCommande) throws Exception {
+    public String validerCommandePassee(@WebParam(name = "idAffaire") Long idAffaire) throws Exception {
         // Vérifier l'existence de l'id commande indiqué
-        String aff = this.expoAchat.getAffaireByIdCommande(idCommande);
+        String aff = this.expoAchat.getAffaireByIdAffaire(idAffaire);
         System.out.println("test cmd : " + aff);
         if (aff == null
                 || aff.contains("Not Found")){
-            throw new Exception("ERREUR : Pas d'affaire associée à l'id commande indiqué.");
+            throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
         }
         
         // Vérifier l'état de la commande
         if (aff.contains("CREEE")
                 && aff.contains("rdvCommercial")){
             // Maj l'état de l'affaire
-            this.expoAchat.validerCommandePassee(idCommande);
+            this.expoAchat.validerCommandePassee(idAffaire);
         } else {
             throw new Exception("ERREUR : AFFAIRE NE DOIT PAS ÊTRE VALIDEE");
         }
@@ -56,18 +56,18 @@ public class WSAchat {
      * @throws java.lang.Exception Si l'id commande ne correspond à aucune commande répertoriée
      */
     @WebMethod(operationName = "validerReceptionCommande")
-    public String validerReceptionCommande(@WebParam(name = "idCommande") Long idCommande) throws Exception {
-        String aff = this.expoAchat.getAffaireByIdCommande(idCommande);
+    public String validerReceptionCommande(@WebParam(name = "idAffaire") Long idAffaire) throws Exception {
+        String aff = this.expoAchat.getAffaireByIdAffaire(idAffaire);
         System.out.println("affaire : " + aff);
         if (aff == null
                 || aff.contains("Not Found")){
-            throw new Exception("ERREUR : Pas d'affaire associée à l'id commande indiqué.");
+            throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
         }
         // Vérifier l'état de la commande
         if (aff.contains("COMMANDEE")
                 && aff.contains("rdvCommercial")){
             // Maj l'état de l'affaire
-            this.expoAchat.validerReceptionCommande(idCommande);
+            this.expoAchat.validerReceptionCommande(idAffaire);
         } else {
             throw new Exception("ERREUR : AFFAIRE NE DOIT PAS ÊTRE RECEPTIONNEE");
         }
