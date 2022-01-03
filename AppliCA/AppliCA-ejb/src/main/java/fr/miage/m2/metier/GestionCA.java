@@ -301,4 +301,22 @@ public class GestionCA implements GestionCALocal {
             }
         } 
     }
+    
+    @Override
+    public Affaire getAffaireByIdCommande(Long idCmd) throws Exception{
+        if (getAllAffaires().isEmpty()){
+            System.out.println("LISTE VIDE");
+            return null;
+        }
+        for (Affaire aff : getAllAffaires().values()){
+            for (Commande cmd : aff.getListeCommandes()){
+                if(cmd.getIdCommande().toString().equals(idCmd.toString())){
+                    System.out.println("CMD EXISTANTE");
+                    return aff;
+                } 
+            }
+        }
+        System.out.println("PAS DE CMD");
+        return null;
+    }
 }

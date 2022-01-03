@@ -39,5 +39,6 @@ public interface GestionCALocal {
     public void updateDispoCommercial(String idDispo);
     
     public void updateDispoPoseur(String idDispo);
-    
+
+    public Affaire getAffaireByIdCommande(Long idCmd) throws Exception;
 }

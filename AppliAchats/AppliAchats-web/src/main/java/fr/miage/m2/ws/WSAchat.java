@@ -31,10 +31,10 @@ public class WSAchat {
     public String validerCommandePassee(@WebParam(name = "idCommande") Long idCommande) throws Exception {
         // Vérifier l'existence de l'id commande indiqué
         String cmd = this.expoAchat.getAffaireByIdCommande(idCommande);
-        System.out.println("res : " + cmd);
-        if (cmd == null){
+        if (cmd.contains("404")){
             throw new Exception("ERREUR : Pas d'affaire associée à l'id commande indiqué.");
         }
+        // Maj l'état de l'affaire
         this.expoAchat.validerCommandePassee(idCommande);
         return "OK";
     }
@@ -48,7 +48,7 @@ public class WSAchat {
     @WebMethod(operationName = "validerReceptionCommande")
     public String validerReceptionCommande(@WebParam(name = "idCommande") Long idCommande) throws Exception {
         String cmd = this.expoAchat.getAffaireByIdCommande(idCommande);
-        if (cmd == null){
+        if (cmd.contains("404")){
             throw new Exception("ERREUR : Pas d'affaire associée à l'id commande indiqué.");
         }
         this.expoAchat.validerReceptionCommande(idCommande);

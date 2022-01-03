@@ -123,9 +123,12 @@ public class ExpoCAResource {
     @GET
     @Path("commandes/{idCommande}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAffaireByIdCommande(@PathParam("idCommande") String idCommande) {
-        //String response = this.gson.toJson(this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande)));
-        return Response.ok("ok").build();
+    public Response getAffaireByIdCommande(@PathParam("idCommande") String idCommande) throws Exception {
+        String response = this.gson.toJson(this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande)));
+        if (response == null){
+            return Response.status(404).build();
+        }
+        return Response.ok(response).build();
     }
     
     
@@ -152,13 +155,6 @@ public class ExpoCAResource {
         System.out.println("mon id dispo : " + idDispo);
         this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
         return Response.ok("RDV Commercial pris.").build();
-        //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
-        /**
-        System.out.println("donné en param dispo : " + idDispo);
-        System.out.println("donné en param commande : " + idCommande);
-        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
-        return Response.ok("OK : RDV Commercial pris.").build();
-        * **/
     }
     
     @PUT
@@ -167,13 +163,6 @@ public class ExpoCAResource {
     public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
         this.gestionCA.setEtatDispoPoseurs(idCommande, idDispo);
         return Response.ok("RDV Poseur pris.").build();
-        //this.gestionCA.setEtatDispoCommerciaux(Long.parseLong(idCommande), Long.parseLong(idDispo));
-        /**
-        System.out.println("donné en param dispo : " + idDispo);
-        System.out.println("donné en param commande : " + idCommande);
-        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
-        return Response.ok("OK : RDV Commercial pris.").build();
-        * **/
     }
 
 }
