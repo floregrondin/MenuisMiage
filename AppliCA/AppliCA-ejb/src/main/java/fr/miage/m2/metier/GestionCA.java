@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.miage.m2.menuismiageshared.Affaire;
 import fr.miage.m2.menuismiageshared.Commande;
 import fr.miage.m2.menuismiageshared.Disponibilite;
+import fr.miage.m2.menuismiageshared.EtatAffaire;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -85,7 +86,6 @@ public class GestionCA implements GestionCALocal {
 
         String json = response.readEntity(String.class);
         return json;
-
     }
 
     /**
@@ -117,31 +117,38 @@ public class GestionCA implements GestionCALocal {
     /**
      * Permet de mettre à jour l'état d'une affaire après réception JMS
      *
-     * @param idAffaire Id de l'affaire pour pouvoir faire un get dessus
+     * @param idCmd Id de la cmd pour pouvoir récupérer l'affaire
      * @param etatAffaire Nouvel etat de l'affaire
      */
     @Override
-    public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire) {
-        Affaire a = getAffaire(idAffaire);
-
-        System.out.println("Récupération de l'affaire : " + a);
-        //TODO: Gérer directement dans l'expo WS/REST si id fourni n'existe pas en bd (dans notre liste)
-        if (a == null) {
-            //throw new Error("ERREUR : Affaire inexistante");
+    public void updateEtatAffaireByIdAffaire(Long idCmd, String etatAffaire) {
+        try {
+            Affaire a = getAffaireByIdCommande(idCmd);
+            
+            System.out.println("Récupération de l'affaire : " + a);
+            //TODO: Gérer directement dans l'expo WS/REST si id fourni n'existe pas en bd (dans notre liste)
+            if (a == null) {
+                try {
+                    throw new Exception("ERREUR : Affaire inexistante");
+                } catch (Exception ex) {
+                    Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            // Mise à jour de l'état de l'affaire avec l'enum
+            // TODO: Essayer de faire avant l'envoi dans JMS
+            if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())) {
+                a.setEtatAffaire(EtatAffaire.COMMANDEE);
+            } else if (etatAffaire.equals(EtatAffaire.RECEPTIONNEE.toString())) {
+                a.setEtatAffaire(EtatAffaire.RECEPTIONNEE);
+            } else if (etatAffaire.equals(EtatAffaire.POSEE.toString())) {
+                a.setEtatAffaire(EtatAffaire.POSEE);
+            }else if(etatAffaire.equals(EtatAffaire.CLOTUREE.toString())){
+                a.setEtatAffaire(EtatAffaire.CLOTUREE);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        /*
-        // Mise à jour de l'état de l'affaire avec l'enum 
-        // TODO: Essayer de faire avant l'envoi dans JMS
-        if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())) {
-            a.setEtatAffaire(EtatAffaire.COMMANDEE);
-        } else if (etatAffaire.equals(EtatAffaire.RECEPTIONNEE.toString())) {
-            a.setEtatAffaire(EtatAffaire.RECEPTIONNEE);
-        } else if (etatAffaire.equals(EtatAffaire.POSEE.toString())) {
-            a.setEtatAffaire(EtatAffaire.POSEE);
-        }else if(etatAffaire.equals(EtatAffaire.CLOTUREE.toString())){
-            a.setEtatAffaire(EtatAffaire.CLOTUREE);
-        } */
     }
 
     /**
@@ -206,7 +213,6 @@ public class GestionCA implements GestionCALocal {
         try {
             mapDispoC = mapper.readValue(getAllDispoCommerciaux(), new TypeReference<List<Map<String, String>>>() {});
             // Pour chaque disponibilité
-            System.out.println("liste des dispo : " + mapDispoC.toString());
             for (Map<String, String> liste : mapDispoC){
                 // Si elle contient l'attribut recherché
                 if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
@@ -275,7 +281,6 @@ public class GestionCA implements GestionCALocal {
             // Pour chaque disponibilité
             for (Map<String, String> liste : mapDispoC){
                 // Si elle contient l'attribut recherché
-                System.out.println("liste dispo pose : " + liste.toString());
                 if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
                     // Récupérer la disponibilité
                     dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
@@ -314,7 +319,7 @@ public class GestionCA implements GestionCALocal {
     public Affaire getAffaireByIdCommande(Long idCmd) throws Exception{
         if (getAllAffaires().isEmpty()){
             System.out.println("LISTE VIDE");
-            return null;
+            throw new Exception("ERREUR : COMMANDE INEXISTANTE.");
         }
         for (Affaire aff : getAllAffaires().values()){
             for (Commande cmd : aff.getListeCommandes()){
@@ -325,7 +330,7 @@ public class GestionCA implements GestionCALocal {
             }
         }
         System.out.println("PAS DE CMD");
-        return null;
+        throw new Exception("ERREUR : COMMANDE INEXISTANTE.");
     }
     
     @Override

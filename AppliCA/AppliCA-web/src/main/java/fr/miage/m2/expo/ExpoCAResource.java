@@ -6,6 +6,7 @@
 package fr.miage.m2.expo;
 
 import com.google.gson.Gson;
+import fr.miage.m2.menuismiageshared.Affaire;
 import fr.miage.m2.metier.GestionCALocal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,7 +107,6 @@ public class ExpoCAResource {
         String response = this.gson.toJson(this.gestionCA.getAllDispoCommerciaux());
         response = response.replace("\\", "");
         response = response.substring( 1, response.length() - 1 );
-        //System.out.println("ICI : " + response);
         return Response.ok(response).build();
     }
 
@@ -124,11 +124,15 @@ public class ExpoCAResource {
     @Path("commandes/{idCommande}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAffaireByIdCommande(@PathParam("idCommande") String idCommande) throws Exception {
-        String response = this.gson.toJson(this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande)));
-        if (response == null){
-            return Response.status(404).build();
-        }
-        return Response.ok(response).build();
+        try {
+            String response = this.gson.toJson(this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande)));
+            if (response == null){
+                return Response.status(404).build();
+            }
+            return Response.ok(response).build();
+        } catch (Exception ex){
+            return Response.status(404).build(); 
+        }  
     }
     
     @GET
@@ -161,23 +165,60 @@ public class ExpoCAResource {
         Long idA = Long.valueOf(idAffaire);
         if (this.gestionCA.getAffaire(idA) == null){
             return Response.status(404).build();
-        }
+        } 
         return Response.ok(this.gson.toJson(this.gestionCA.cloturerAffaire(idA))).build();
     }
     
     @PUT
     @Path("RDVCommerciaux/{idDispo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
-        System.out.println("mon id dispo : " + idDispo);
-        this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+    public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) throws Exception {
+        Affaire aff = this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande));
+        
+        if (aff == null
+                || aff.toString().contains("Not Found")){
+            System.out.println("ERREUR : AFFAIRE INEXISTANTE.");
+            return Response.status(400).build();
+        }
+        
+        System.out.println("dispo commerciaux : " + this.gestionCA.getAllDispoCommerciaux());
+        System.out.println("req : " + !this.gestionCA.getAllDispoCommerciaux().contains("\"idDisponibilite\":"+idDispo));
+        if (this.gestionCA.getAllDispoCommerciaux().isEmpty()
+                || (!this.gestionCA.getAllDispoCommerciaux().contains("\"idDisponibilite\":"+idDispo))){
+            System.out.println("ERREUR : DISPONIBILITE INDIQUEE INCORRECTE.");
+            return Response.status(400).build();
+        }
+                
+        if ("CREEE".equals(aff.getEtatAffaire().toString())){
+            // Maj l'état de l'affaire
+            this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+        } else {
+            System.out.println("ERREUR : AFFAIRE NE NECESSITE PAS UN RDV COMMERCIAL");
+            return Response.status(401).build();
+
+        }
         return Response.ok("RDV Commercial pris.").build();
     }
     
     @PUT
     @Path("RDVPoseurs/{idDispo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) {
+    public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idCommande") String idCommande) throws Exception {
+        Affaire aff = this.gestionCA.getAffaireByIdCommande(Long.valueOf(idCommande));
+        
+        if (aff == null
+                || aff.toString().contains("Not Found")){
+            System.out.println("ERREUR : AFFAIRE INEXISTANTE.");
+            return Response.status(400).build();
+        }
+        
+        if ("RECEPTIONNEE".equals(aff.getEtatAffaire().toString())){
+            // Maj l'état de l'affaire
+            this.gestionCA.setEtatDispoCommerciaux(idCommande, idDispo);
+        } else {
+            System.out.println("ERREUR : AFFAIRE NE NECESSITE PAS UN RDV DE POSE");
+            return Response.status(401).build();
+        }
         this.gestionCA.setEtatDispoPoseurs(idCommande, idDispo);
         return Response.ok("RDV Poseur pris.").build();
     }

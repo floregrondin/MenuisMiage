@@ -30,12 +30,22 @@ public class WSAchat {
     @WebMethod(operationName = "validerCommandePassee")
     public String validerCommandePassee(@WebParam(name = "idCommande") Long idCommande) throws Exception {
         // Vérifier l'existence de l'id commande indiqué
-        String cmd = this.expoAchat.getAffaireByIdCommande(idCommande);
-        if (cmd.contains("404")){
+        String aff = this.expoAchat.getAffaireByIdCommande(idCommande);
+        System.out.println("test cmd : " + aff);
+        if (aff == null
+                || aff.contains("Not Found")){
             throw new Exception("ERREUR : Pas d'affaire associée à l'id commande indiqué.");
         }
-        // Maj l'état de l'affaire
-        this.expoAchat.validerCommandePassee(idCommande);
+        
+        // Vérifier l'état de la commande
+        if (aff.contains("CREEE")
+                && aff.contains("rdvCommercial")){
+            // Maj l'état de l'affaire
+            this.expoAchat.validerCommandePassee(idCommande);
+        } else {
+            throw new Exception("ERREUR : AFFAIRE NE DOIT PAS ÊTRE VALIDEE");
+        }
+        
         return "OK";
     }
     
@@ -47,11 +57,20 @@ public class WSAchat {
      */
     @WebMethod(operationName = "validerReceptionCommande")
     public String validerReceptionCommande(@WebParam(name = "idCommande") Long idCommande) throws Exception {
-        String cmd = this.expoAchat.getAffaireByIdCommande(idCommande);
-        if (cmd.contains("404")){
+        String aff = this.expoAchat.getAffaireByIdCommande(idCommande);
+        System.out.println("affaire : " + aff);
+        if (aff == null
+                || aff.contains("Not Found")){
             throw new Exception("ERREUR : Pas d'affaire associée à l'id commande indiqué.");
         }
-        this.expoAchat.validerReceptionCommande(idCommande);
+        // Vérifier l'état de la commande
+        if (aff.contains("COMMANDEE")
+                && aff.contains("rdvCommercial")){
+            // Maj l'état de l'affaire
+            this.expoAchat.validerReceptionCommande(idCommande);
+        } else {
+            throw new Exception("ERREUR : AFFAIRE NE DOIT PAS ÊTRE RECEPTIONNEE");
+        }
         return "OK";
     }
 }

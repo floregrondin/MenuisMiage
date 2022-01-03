@@ -46,6 +46,7 @@ public class GestionAchat implements GestionAchatLocal {
     public void validerCommandePassee(Long idAffaire) {
         Map<Long, String> majEtatAffaire = new HashMap<>();
         majEtatAffaire.put(idAffaire, "COMMANDEE");
+        System.out.println("avant queue : " + majEtatAffaire.toString());
         try {
             sendJMSMessageToEtatCommande(majEtatAffaire);
         } catch (JMSException ex) {
