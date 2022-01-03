@@ -46,6 +46,7 @@ public class GestionCommerciale implements GestionCommercialeLocal {
     public Commande creerCommande(Long idAffaire, Long refCatalogue, String cotes, double montant) {
         // Création de l'objet cmd qu'on passera au MDB
         Commande cmd = new Commande(refCatalogue, cotes, montant, idAffaire);
+        System.out.println("id de la cmd : " + cmd.getIdCommande().toString());
         try {
             // Création du MDB + Envoi
             sendJMSMessageToInfosProduits(cmd);

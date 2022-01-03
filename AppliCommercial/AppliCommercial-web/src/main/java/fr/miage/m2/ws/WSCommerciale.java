@@ -31,15 +31,16 @@ public class WSCommerciale {
      * @return 
      */
     @WebMethod(operationName = "creerCommande")
-    public Long creerCommande(@WebParam(name = "idAffaire") Long idAffaire, @WebParam(name = "refCatalogue") Long refCatalogue, @WebParam(name = "cotes") String cotes, @WebParam(name = "montant") double montant) throws Exception {
+    public String creerCommande(@WebParam(name = "idAffaire") Long idAffaire, @WebParam(name = "refCatalogue") Long refCatalogue, @WebParam(name = "cotes") String cotes, @WebParam(name = "montant") double montant) throws Exception {
         // Vérifier que l'affaire existe en base
         // Si 404 alors paramètre côté REST est incorrect
         if (this.expoCommerciale.getAffaireByIdAffaire(idAffaire) == null
-                || this.expoCommerciale.getAffaireByIdAffaire(idAffaire).contains("404")){
+            || this.expoCommerciale.getAffaireByIdAffaire(idAffaire).contains("404")){
             throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
         }
-        return this.expoCommerciale.creerCommande(idAffaire, refCatalogue, cotes, montant).getIdCommande();
-        //return "OK";
+        this.expoCommerciale.creerCommande(idAffaire, refCatalogue, cotes, montant);
+        return "OK : Commande créée.";
+
     }
 
     

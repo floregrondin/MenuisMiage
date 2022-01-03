@@ -166,22 +166,32 @@ public class GestionCA implements GestionCALocal {
      */
     @Override
     public void associerCmdAffaire(Long refCatalogue, String cotes, double montant, Long idAffaire) {
-        // Récupérer l'affaire
-        if (getAffaire(idAffaire) != null){
-            Affaire affaire = getAffaire(idAffaire);
-            Commande cmd = new Commande(refCatalogue, cotes, montant, idAffaire);
-            List<Commande> listeCmd = affaire.getListeCommandes();
-            // Ajouter la commande à la liste des commandes en "bd"
-            if (listeCmd == null){
-                // S'il n'y a pas de commande pour une affaire, on créé une liste
-                listeCmd = new ArrayList<>();
+        try {
+            System.out.println("mon affaire : " + getAffaire(idAffaire));
+            // Récupérer l'affaire
+            if (getAffaire(idAffaire) != null){
+                Affaire affaire = getAffaire(idAffaire);
+                Commande cmd = new Commande(refCatalogue, cotes, montant, idAffaire);
+                List<Commande> listeCmd = affaire.getListeCommandes();
+                // Ajouter la commande à la liste des commandes en "bd"
+                if (listeCmd == null){
+                    // S'il n'y a pas de commande pour une affaire, on créé une liste
+                    listeCmd = new ArrayList<>();
+                }
+                // Et on rajoute la commande
+                listeCmd.add(cmd);
+                // Ajouter la commande à la liste des commandes de l'affaire
+                affaire.setListeCommandes(listeCmd);
+            } else {
+                throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");  
             }
-            // Et on rajoute la commande
-            listeCmd.add(cmd);
-            // Ajouter la commande à la liste des commandes de l'affaire
-            affaire.setListeCommandes(listeCmd);
-        } else {
-            System.out.println("ERREUR : Affaire introuvable.");
+        } catch (Exception ex) {
+            try {  
+                throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
+            } catch (Exception ex1) {
+                Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
@@ -201,7 +211,6 @@ public class GestionCA implements GestionCALocal {
                 // Si elle contient l'attribut recherché
                 if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
                     // Récupérer la disponibilité
-                    System.out.println("JE RENTRE");
                     dispoRecherchee.setIdDisponibilite(Long.valueOf(liste.get("idDisponibilite")));
                     dispoRecherchee.setIdCommercial(Long.valueOf(liste.get("idCommercial")));
                     dispoRecherchee.setEstDispo(false);
@@ -214,7 +223,6 @@ public class GestionCA implements GestionCALocal {
                     // MAJ l'état de la dispo dans la liste
                     liste.put("estDispo", "false");
                     // Récupérer l'index de la dispo pour supprimer dans l'appli commerciale
-                    System.out.println("mon id commercial : " + liste.get("idDisponibilite"));
                     updateDispoCommercial(liste.get("idDisponibilite"));
                 }
             }
