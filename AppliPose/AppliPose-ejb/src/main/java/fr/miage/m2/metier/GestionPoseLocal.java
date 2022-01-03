@@ -21,4 +21,6 @@ public interface GestionPoseLocal {
     public void validerPose(Long idAffaire);
     
     public void updateDisponibilite (Long idDispo);
+    
+    public String getAffaireByIdAffaire(Long idAffaire);
 }

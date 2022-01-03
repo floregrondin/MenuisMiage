@@ -26,6 +26,8 @@ public class ExpoPose implements ExpoPoseLocal {
         this.gestionPose.validerPose(idAffaire);
     }
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @Override
+    public String getAffaireByIdAffaire(Long idAffaire){
+        return this.gestionPose.getAffaireByIdAffaire(idAffaire);
+    }
 }

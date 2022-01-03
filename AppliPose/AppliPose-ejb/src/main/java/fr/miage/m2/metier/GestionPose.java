@@ -17,10 +17,17 @@ import javax.ejb.Stateless;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.naming.NamingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -33,7 +40,9 @@ public class GestionPose implements GestionPoseLocal {
     private Queue etatCommande;
 
     @Resource(mappedName = "MenuisMiage")
-    private ConnectionFactory MenuisMiage;
+    private ConnectionFactory menuisMiage;
+
+    private ArrayList<Disponibilite> listeDisponibilites= null;
 
     
     /**
@@ -43,12 +52,23 @@ public class GestionPose implements GestionPoseLocal {
     private void sendJMSMessageToEtatCommande(Object messageData) throws NamingException, JMSException {
         Connection connection = null;
         Session session = null;
-
-        connection = MenuisMiage.createConnection();
-        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        MessageProducer messageProducer = session.createProducer(etatCommande);
-        messageProducer.send(session.createTextMessage(messageData.toString()));
-
+        try {
+            connection = menuisMiage.createConnection();
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            MessageProducer messageProducer = session.createProducer(etatCommande);
+            messageProducer.send(createJMSMessageForEtatCommande(session, messageData));
+        } finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (JMSException e) {
+                    Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot close session", e);
+                }
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
 
     /**
@@ -66,9 +86,13 @@ public class GestionPose implements GestionPoseLocal {
         }
     }
     
-    
-    private ArrayList<Disponibilite> listeDisponibilites= null;
-    
+    private Message createJMSMessageForEtatCommande(Session session, Object messageData) throws JMSException {
+        // TODO create and populate message to send
+        TextMessage tm = session.createTextMessage();
+        tm.setText(messageData.toString());
+        return tm;
+    }
+       
     @Override
     public ArrayList<Disponibilite> getListeDisponibilites() {
         if(this.listeDisponibilites == null){
@@ -93,19 +117,31 @@ public class GestionPose implements GestionPoseLocal {
     
     @Override
     public void updateDisponibilite (Long idDispo){
-        System.out.println("ID Param requete : "+idDispo);
         if (this.listeDisponibilites != null){
-            System.out.println("Liste non null");
+            if (this.listeDisponibilites.isEmpty()){
+                try {
+                    throw new Exception("ERREUR : PAS DE DISPONIBILITES.");
+                } catch (Exception ex) {
+                    Logger.getLogger(GestionPose.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             for(Disponibilite d : this.listeDisponibilites){
-                System.out.println("ID Dispo liste : "+d.getIdDisponibilite());
                 if (d.getIdDisponibilite().equals(idDispo)){
-                    
                     d.setEstDispo(false);
                 }
             }
-        } else {
-            //EXCEPTION LISTE INEXSITANTE
         }
     }
+
+    @Override
+    public String getAffaireByIdAffaire(Long idAffaire) {
+        Client client = ClientBuilder.newClient();
+        WebTarget wt = client.target("http://localhost:8080/AppliCA-web/webresources/ExpoCA/affaires/"+idAffaire.toString());
+        Response response = wt
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        String json = response.readEntity(String.class);
+        return json;    }
     
 }

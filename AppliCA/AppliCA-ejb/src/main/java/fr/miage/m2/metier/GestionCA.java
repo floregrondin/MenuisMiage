@@ -121,9 +121,9 @@ public class GestionCA implements GestionCALocal {
      * @param etatAffaire Nouvel etat de l'affaire
      */
     @Override
-    public void updateEtatAffaireByIdAffaire(Long idCmd, String etatAffaire) {
+    public void updateEtatAffaireByIdAffaire(Long idAffaire, String etatAffaire) {
         try {
-            Affaire a = getAffaireByIdCommande(idCmd);
+            Affaire a = getAffaireByIdAffaire(idAffaire);
             
             System.out.println("Récupération de l'affaire : " + a);
             //TODO: Gérer directement dans l'expo WS/REST si id fourni n'existe pas en bd (dans notre liste)

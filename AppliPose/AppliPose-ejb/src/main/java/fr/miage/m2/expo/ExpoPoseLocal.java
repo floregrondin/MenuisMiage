@@ -13,5 +13,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface ExpoPoseLocal {
+    
     public void validerPose(Long idAffaire);
+    
+    public String getAffaireByIdAffaire(Long idAffaire);
+
 }

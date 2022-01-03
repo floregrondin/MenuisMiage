@@ -30,7 +30,9 @@ public class WSPose {
      */
     @WebMethod(operationName = "validerPose")
     public String validerPose(@WebParam(name = "idAffaire") Long idAffaire) {
+        String aff = this.expoPose.getAffaireByIdAffaire(idAffaire);
+        System.out.println("aff pose : " + aff);
         this.expoPose.validerPose(idAffaire);
-        return "Etat mis à jour";
+        return "OK : Affaire mise à jour.";
     }
 }
