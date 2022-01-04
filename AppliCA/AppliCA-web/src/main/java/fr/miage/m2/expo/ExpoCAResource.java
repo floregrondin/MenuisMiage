@@ -80,6 +80,7 @@ public class ExpoCAResource {
     @Path("dispoCommerciaux")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllDispoCommerciaux() {
+        System.out.println("dispo commerciaux : " + this.gestionCA.getAllDispoCommerciaux());
         String response = this.gson.toJson(this.gestionCA.getAllDispoCommerciaux());
         response = response.replace("\\", "");
         response = response.substring( 1, response.length() - 1 );
@@ -149,6 +150,7 @@ public class ExpoCAResource {
     public Response majRDVCommercial(@PathParam("idDispo") String idDispo, @QueryParam("idAffaire") String idAffaire) throws Exception {
         Affaire aff = this.gestionCA.getAffaireByIdAffaire(Long.valueOf(idAffaire));
         
+        System.out.println("affaire : " + aff);
         if (aff == null
                 || aff.toString().contains("Not Found")){
             System.out.println("ERREUR : AFFAIRE INEXISTANTE.");
@@ -169,7 +171,6 @@ public class ExpoCAResource {
         } else {
             System.out.println("ERREUR : AFFAIRE NE NECESSITE PAS UN RDV COMMERCIAL");
             return Response.status(401).build();
-
         }
         return Response.ok("RDV Commercial pris.").build();
     }
@@ -187,14 +188,18 @@ public class ExpoCAResource {
             return Response.status(400).build();
         }
         
+        if (!aff.toString().contains("idCommande")){
+            System.out.println("ERREUR : PAS DE COMMANDE ASSOCIEE.");
+            return Response.status(404).build();
+        }
+        
         if ("RECEPTIONNEE".equals(aff.getEtatAffaire().toString())){
             // Maj l'état de l'affaire
-            this.gestionCA.setEtatDispoCommerciaux(idAffaire, idDispo);
+            this.gestionCA.setEtatDispoPoseurs(idAffaire, idDispo);
         } else {
             System.out.println("ERREUR : AFFAIRE NE NECESSITE PAS UN RDV DE POSE");
             return Response.status(401).build();
         }
-        this.gestionCA.setEtatDispoPoseurs(idAffaire, idDispo);
         return Response.ok("RDV Poseur pris.").build();
     }
 

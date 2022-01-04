@@ -37,6 +37,10 @@ public class WSAchat {
             throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
         }
         
+        if (!aff.contains("idCommande")){
+            throw new Exception("ERREUR : PAS DE COMMANDE ASSOCIEE.");
+        }
+        
         // Vérifier l'état de la commande
         if (aff.contains("CREEE")
                 && aff.contains("rdvCommercial")){
@@ -63,6 +67,11 @@ public class WSAchat {
                 || aff.contains("Not Found")){
             throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
         }
+        
+        if (!aff.contains("idCommande")){
+            throw new Exception("ERREUR : PAS DE COMMANDE ASSOCIEE.");
+        }
+        
         // Vérifier l'état de la commande
         if (aff.contains("COMMANDEE")
                 && aff.contains("rdvCommercial")){

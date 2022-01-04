@@ -39,9 +39,6 @@ public class GestionAchat implements GestionAchatLocal {
     @Resource(mappedName = "MenuisMiage")
     private ConnectionFactory menuisMiage;
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-
     @Override
     public void validerCommandePassee(Long idAffaire) {
         Map<Long, String> majEtatAffaire = new HashMap<>();

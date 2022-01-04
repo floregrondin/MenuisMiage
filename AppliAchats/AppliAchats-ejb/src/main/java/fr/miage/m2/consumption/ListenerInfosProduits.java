@@ -46,8 +46,10 @@ public class ListenerInfosProduits implements MessageListener {
     public void onMessage(Message message) {
         if (message instanceof ObjectMessage) {
             try {
+                // A la réception d'un message = commande
                 ObjectMessage om =(ObjectMessage) message;
                 Commande cmd = (Commande) om.getObject();
+                // Appel au métier pour passer la commande
                 this.gestionAchat.passerCommande(cmd);
             } catch (JMSException ex) {
                 Logger.getLogger(ListenerInfosProduits.class.getName()).log(Level.SEVERE, null, ex);

@@ -117,7 +117,7 @@ public class GestionCA implements GestionCALocal {
     /**
      * Permet de mettre à jour l'état d'une affaire après réception JMS
      *
-     * @param idCmd Id de la cmd pour pouvoir récupérer l'affaire
+     * @param idAffaire Id de l'affaire
      * @param etatAffaire Nouvel etat de l'affaire
      */
     @Override
@@ -228,7 +228,6 @@ public class GestionCA implements GestionCALocal {
                     dispoRecherchee.setDateRdv(timestamp);  
                     // MAJ l'état de la dispo dans la liste
                     liste.put("estDispo", "false");
-                    // Récupérer l'index de la dispo pour supprimer dans l'appli commerciale
                     updateDispoCommercial(liste.get("idDisponibilite"));
                 }
             }
@@ -236,15 +235,13 @@ public class GestionCA implements GestionCALocal {
             Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
                     
+        System.out.println("COMMERCIAL : dispo recherchee : " + dispoRecherchee);
         // Parcourir les affaires
-        for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
+        for (Affaire a : getAllAffaires().values()){
             // Récupérer l'affaire dont l'id a été fourni par l'utilisateur
-            if (idAffaire.equals(a.getValue().getIdAffaire().toString())){;
-                try {
-                    getAffaireByIdAffaire(Long.valueOf(idAffaire)).setRdvCommercial(dispoRecherchee);
-                } catch (Exception ex) {
-                    Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            if (idAffaire.equals(a.getIdAffaire().toString())){;
+                getAffaire(Long.valueOf(idAffaire)).setRdvCommercial(dispoRecherchee);
+                System.out.println("COMMERCIAL : rdv commercial : " + getAffaire(Long.valueOf(idAffaire)));
             }
         }
     }
@@ -273,13 +270,13 @@ public class GestionCA implements GestionCALocal {
     public void setEtatDispoPoseurs(String idAffaire, String idDispo){
         // Parcourir les dispo poseurs
         ObjectMapper mapper = new ObjectMapper();
-        List<Map<String, String>> mapDispoC;
+        List<Map<String, String>> mapDispoP;
         Disponibilite dispoRecherchee = new Disponibilite();
         
         try {
-            mapDispoC = mapper.readValue(getAllDispoPoseurs(), new TypeReference<List<Map<String, String>>>() {});
+            mapDispoP = mapper.readValue(getAllDispoPoseurs(), new TypeReference<List<Map<String, String>>>() {});
             // Pour chaque disponibilité
-            for (Map<String, String> liste : mapDispoC){
+            for (Map<String, String> liste : mapDispoP){
                 // Si elle contient l'attribut recherché
                 if (liste.get("idDisponibilite").equals(idDispo) && "true".equals(liste.get("estDispo"))){
                     // Récupérer la disponibilité
@@ -301,16 +298,13 @@ public class GestionCA implements GestionCALocal {
         } catch (IOException | ParseException ex) {
             Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
-                    
+          
         // Parcourir les affaires
-        for (Map.Entry<Long, Affaire> a : getAllAffaires().entrySet()){
+        for (Affaire a : getAllAffaires().values()){
             // Récupérer l'affaire dont l'id a été fourni par l'utilisateur
-            if (idAffaire.equals(a.getValue().getIdAffaire().toString())){
-                try {
-                    getAffaireByIdAffaire(Long.valueOf(idAffaire)).setRdvPose(dispoRecherchee);
-                } catch (Exception ex) {
-                    Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            if (idAffaire.equals(a.getIdAffaire().toString())){
+                System.out.println("POSE : mon affaire : " + getAffaire(Long.valueOf(idAffaire)));
+                getAffaire(Long.valueOf(idAffaire)).setRdvPose(dispoRecherchee);
             }
         } 
     }
