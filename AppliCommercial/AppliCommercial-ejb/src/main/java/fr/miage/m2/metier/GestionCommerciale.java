@@ -59,7 +59,6 @@ public class GestionCommerciale implements GestionCommercialeLocal {
 
     private Message createJMSMessageForinfosProduits(Session session, Commande cmd) throws JMSException {
         ObjectMessage tm = session.createObjectMessage();
-        // Envoi de l'objet commande
         tm.setObject(cmd);
         return tm;
     }
@@ -112,13 +111,11 @@ public class GestionCommerciale implements GestionCommercialeLocal {
     
     @Override
     public void updateDisponibilite (Long idDispo){
-        System.out.println("ID Param requete : "+idDispo);
         if (this.listeDisponibilites != null){
             System.out.println("Liste non null");
             for(Disponibilite d : this.listeDisponibilites){
                 System.out.println("ID Dispo liste : "+d.getIdDisponibilite());
                 if (d.getIdDisponibilite().equals(idDispo)){
-                    
                     d.setEstDispo(false);
                 }
             }
@@ -127,6 +124,11 @@ public class GestionCommerciale implements GestionCommercialeLocal {
         }
     }
     
+    /**
+     * Permet de récupérer une affaire grâce à son id affaire
+     * @param idAffaire
+     * @return 
+     */
     @Override
     public String getAffaireByIdAffaire(Long idAffaire) {
         Client client = ClientBuilder.newClient();

@@ -72,7 +72,7 @@ public class GestionCA implements GestionCALocal {
     }
 
     /**
-     * Récupérer toutes les disponibilités des commerciaux
+     * Permet de récupérer toutes les disponibilités des commerciaux
      * @return la liste des disponibilités des commerciaux en json
      */
     @Override
@@ -89,7 +89,7 @@ public class GestionCA implements GestionCALocal {
     }
 
     /**
-     * Récupérer toutes les disponibilités des poseurs
+     * Permet de récupérer toutes les disponibilités des poseurs
      * @return la liste des disponibilités des poseurs en json
      */
     @Override
@@ -105,7 +105,7 @@ public class GestionCA implements GestionCALocal {
     }
 
     /**
-     * Récupérer une affaire selon son id
+     * Permet de récupérer une affaire selon son id
      * @param idAffaire
      * @return 
      */
@@ -136,7 +136,7 @@ public class GestionCA implements GestionCALocal {
             }
             
             // Mise à jour de l'état de l'affaire avec l'enum
-            // TODO: Essayer de faire avant l'envoi dans JMS
+            // TODO: Envoyer enum EtatAffaire directement pendant la production du msg JMS
             if (etatAffaire.equals(EtatAffaire.COMMANDEE.toString())) {
                 a.setEtatAffaire(EtatAffaire.COMMANDEE);
             } else if (etatAffaire.equals(EtatAffaire.RECEPTIONNEE.toString())) {
@@ -235,13 +235,11 @@ public class GestionCA implements GestionCALocal {
             Logger.getLogger(GestionCA.class.getName()).log(Level.SEVERE, null, ex);
         }
                     
-        System.out.println("COMMERCIAL : dispo recherchee : " + dispoRecherchee);
         // Parcourir les affaires
         for (Affaire a : getAllAffaires().values()){
             // Récupérer l'affaire dont l'id a été fourni par l'utilisateur
             if (idAffaire.equals(a.getIdAffaire().toString())){;
                 getAffaire(Long.valueOf(idAffaire)).setRdvCommercial(dispoRecherchee);
-                System.out.println("COMMERCIAL : rdv commercial : " + getAffaire(Long.valueOf(idAffaire)));
             }
         }
     }
@@ -309,6 +307,14 @@ public class GestionCA implements GestionCALocal {
         } 
     }
     
+    /**
+     * Permet de récupérer une affaire grâce à l'id commande 
+     * Utilisée dans la première version lorsqu'on mettait à jour etatAffaire selon l'id commande (cf vidéo démo)
+     * @param idCmd L'id de la commande
+     * @return objet de type affaire contenant la commande dans sa liste de commandes associée
+     * @throws Exception 
+     */
+    @Deprecated
     @Override
     public Affaire getAffaireByIdCommande(Long idCmd) throws Exception{
         if (getAllAffaires().isEmpty()){
@@ -327,16 +333,27 @@ public class GestionCA implements GestionCALocal {
         throw new Exception("ERREUR : COMMANDE INEXISTANTE.");
     }
     
+    /**
+     * Permet de récupérer l'affaire grâce à son id
+     * @param idAffaire
+     * @return Affaire
+     * @throws Exception Si affaire inexistante 
+     */
     @Override
     public Affaire getAffaireByIdAffaire(Long idAffaire) throws Exception{
+        // Check si liste d'affaires vide
         if(getAllAffaires().isEmpty()){
             throw new Exception("ERREUR : AFFAIRE INEXISTANTE");
         }
+        
+        // Sinon pour chaque affaire répertoriée dans la liste des affaires
         for (Affaire aff : getAllAffaires().values()){
+            // Si l'id d'une affaire correspond à celui en param
             if (aff.getIdAffaire().toString().equals(idAffaire.toString())){
                 return aff;
             }
         }
+        // Si pas de match alors erreur
         throw new Exception("ERREUR : AFFAIRE INEXISTANTE");
     }
 }

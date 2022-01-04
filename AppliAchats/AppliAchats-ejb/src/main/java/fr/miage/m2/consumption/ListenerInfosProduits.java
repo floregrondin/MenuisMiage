@@ -50,6 +50,7 @@ public class ListenerInfosProduits implements MessageListener {
                 ObjectMessage om =(ObjectMessage) message;
                 Commande cmd = (Commande) om.getObject();
                 // Appel au métier pour passer la commande
+                // Méthode vide --> syso
                 this.gestionAchat.passerCommande(cmd);
             } catch (JMSException ex) {
                 Logger.getLogger(ListenerInfosProduits.class.getName()).log(Level.SEVERE, null, ex);

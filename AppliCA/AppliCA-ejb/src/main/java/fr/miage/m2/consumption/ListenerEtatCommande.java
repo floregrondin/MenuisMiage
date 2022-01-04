@@ -37,8 +37,10 @@ public class ListenerEtatCommande implements MessageListener {
     public void onMessage(Message message) {
 
         try {
+            // Formattage du message reçu de type etatAffaire=POSEE par ex
             String[] argsMess = message.getBody(String.class).replace("{", "").replace("}","").split("=");
             
+            // Mise à jour de l'état de l'affaire
             this.gestionCA.updateEtatAffaireByIdAffaire(Long.valueOf(argsMess[0]), argsMess[1]);
         } catch (JMSException ex) {
             Logger.getLogger(ListenerEtatCommande.class.getName()).log(Level.SEVERE, null, ex);

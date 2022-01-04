@@ -46,7 +46,8 @@ public class ListenerInfosProduits implements MessageListener {
             try {
                 ObjectMessage om =(ObjectMessage) message;
                 Commande cmd = (Commande) om.getObject();
-                System.out.println("ma commande : " + cmd.toString());
+
+                // Envoi de laa commande à ajouter dans l'affaire
                 this.gestionCA.associerCmdAffaire(cmd.getRefCatalogue(), cmd.getCotes(), cmd.getMontant(), cmd.getIdAffaire());
             } catch (JMSException ex) {
                 Logger.getLogger(ListenerInfosProduits.class.getName()).log(Level.SEVERE, null, ex);

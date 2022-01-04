@@ -19,8 +19,6 @@ public class ExpoPose implements ExpoPoseLocal {
     @EJB
     private GestionPoseLocal gestionPose;
 
-    
-    
     @Override
     public void validerPose(Long idAffaire) {
         this.gestionPose.validerPose(idAffaire);

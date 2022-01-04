@@ -6,7 +6,7 @@
 package fr.miage.m2.menuismiageshared;
 
 /**
- * Permet de déclarer de nouveaux états pour une affaire
+ * Permet de déclarer un nouvel état pour une affaire
  * @author Flo
  */
 public enum EtatAffaire {

@@ -90,12 +90,21 @@ public class GestionAchat implements GestionAchatLocal {
         }
     }
 
+    /**
+     * Permet de passer commande auprès du fournisseur (méthode ko)
+     * @param cmd Objet commande
+     */
     @Override
     public void passerCommande(Commande cmd) {
         //Hors domaine --> Communication avec fournisseur
         System.out.println("ENVOI DE LA COMMANDE AU FOURNISSEUR");
     }
     
+    /**
+     * Permet de récupérer une affaire grâce à son id
+     * @param idAffaire Id de l'affaire
+     * @return retour json de la méthode REST GET de l'appli CA
+     */
     @Override
     public String getAffaireByIdAffaire(Long idAffaire) {
         Client client = ClientBuilder.newClient();

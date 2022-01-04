@@ -149,10 +149,18 @@ public class Disponibilite {
         this.dateRdv = dateRdv;
     }
 
+    /**
+     * Récupérer l'id de l'affaire
+     * @return 
+     */
     public Long getIdAffaire() {
         return idAffaire;
     }
 
+    /**
+     * Met à jour l'id de l'affaire
+     * @param idAffaire 
+     */
     public void setIdAffaire(Long idAffaire) {
         this.idAffaire = idAffaire;
     }
