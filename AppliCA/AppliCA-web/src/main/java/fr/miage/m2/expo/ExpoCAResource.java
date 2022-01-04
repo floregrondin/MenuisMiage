@@ -178,6 +178,7 @@ public class ExpoCAResource {
     @Path("RDVPoseurs/{idDispo}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response majRDVPoseur(@PathParam("idDispo") String idDispo, @QueryParam("idAffaire") String idAffaire) throws Exception {
+        System.out.println("ma valeur idAffaire : " + idAffaire);
         Affaire aff = this.gestionCA.getAffaireByIdAffaire(Long.valueOf(idAffaire));
         
         if (aff == null

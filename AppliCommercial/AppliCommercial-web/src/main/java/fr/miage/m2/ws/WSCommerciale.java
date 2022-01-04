@@ -28,7 +28,7 @@ public class WSCommerciale {
      * @param refCatalogue
      * @param cotes
      * @param montant
-     * @return 
+     * @return Msg "OK : Commande créée."
      */
     @WebMethod(operationName = "creerCommande")
     public String creerCommande(@WebParam(name = "idAffaire") Long idAffaire, @WebParam(name = "refCatalogue") Long refCatalogue, @WebParam(name = "cotes") String cotes, @WebParam(name = "montant") double montant) throws Exception {
@@ -37,6 +37,9 @@ public class WSCommerciale {
         if (this.expoCommerciale.getAffaireByIdAffaire(idAffaire) == null
             || this.expoCommerciale.getAffaireByIdAffaire(idAffaire).contains("404")){
             throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
+        }
+        if (!this.expoCommerciale.getAffaireByIdAffaire(idAffaire).contains("rdvCommercial")){
+            throw new Exception("ERREUR : Merci d'enregistrer le RDV commercial dans l'affaire au préalable.");
         }
         this.expoCommerciale.creerCommande(idAffaire, refCatalogue, cotes, montant);
         return "OK : Commande créée.";

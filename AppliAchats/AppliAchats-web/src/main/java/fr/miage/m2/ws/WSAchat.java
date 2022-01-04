@@ -23,7 +23,7 @@ public class WSAchat {
     
     /**
      * Permet de valider que la commande a été passée. L'état de la commande passe à "COMMANDEE".
-     * @param idCommande
+     * @param idAffaire
      * @return Msg "OK"
      * @throws java.lang.Exception Si l'id commande ne correspond à aucune commande répertoriée
      */
@@ -51,7 +51,7 @@ public class WSAchat {
     
     /**
      * Permet de valider que la commande a été réceptionnée. L'état de la commande passe à "RECEPTIONNEE".
-     * @param idCommande
+     * @param idAffaire
      * @return Msg "OK"
      * @throws java.lang.Exception Si l'id commande ne correspond à aucune commande répertoriée
      */

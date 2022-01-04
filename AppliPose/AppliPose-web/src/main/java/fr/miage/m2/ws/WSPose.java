@@ -24,14 +24,20 @@ public class WSPose {
     
     
     /**
-     * 
+     * Permet de valider la pose pour une affaire
      * @param idAffaire
      * @return 
      */
     @WebMethod(operationName = "validerPose")
-    public String validerPose(@WebParam(name = "idAffaire") Long idAffaire) {
+    public String validerPose(@WebParam(name = "idAffaire") Long idAffaire) throws Exception {
         String aff = this.expoPose.getAffaireByIdAffaire(idAffaire);
-        System.out.println("aff pose : " + aff);
+        if (aff == null
+                || aff.contains("Not Found")){
+            throw new Exception("ERREUR : AFFAIRE INEXISTANTE.");
+        }
+        if (!aff.contains("\"etatAffaire\":\"RECEPTIONNEE\"")){
+            throw new Exception("ERREUR : AFFAIRE NE DOIT PAS ETRE POSEE");
+        }
         this.expoPose.validerPose(idAffaire);
         return "OK : Affaire mise à jour.";
     }
